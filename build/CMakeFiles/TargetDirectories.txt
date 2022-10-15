@@ -1,3 +1,0 @@
-D:/workspaces/my-research-00/libs/ing/build/CMakeFiles/ing.dir
-D:/workspaces/my-research-00/libs/ing/build/CMakeFiles/ALL_BUILD.dir
-D:/workspaces/my-research-00/libs/ing/build/CMakeFiles/ZERO_CHECK.dir
