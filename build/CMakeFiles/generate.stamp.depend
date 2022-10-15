@@ -1,0 +1,23 @@
+# CMake generation dependency list for this directory.
+D:/workspaces/my-research-00/libs/ing/CMakeLists.txt
+D:/workspaces/my-research-00/libs/ing/build/CMakeFiles/3.23.22060601-MSVC_2/CMakeCCompiler.cmake
+D:/workspaces/my-research-00/libs/ing/build/CMakeFiles/3.23.22060601-MSVC_2/CMakeCXXCompiler.cmake
+D:/workspaces/my-research-00/libs/ing/build/CMakeFiles/3.23.22060601-MSVC_2/CMakeRCCompiler.cmake
+D:/workspaces/my-research-00/libs/ing/build/CMakeFiles/3.23.22060601-MSVC_2/CMakeSystem.cmake
+E:/env/Visual Studio/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.23/Modules/CMakeCInformation.cmake
+E:/env/Visual Studio/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.23/Modules/CMakeCXXInformation.cmake
+E:/env/Visual Studio/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.23/Modules/CMakeCommonLanguageInclude.cmake
+E:/env/Visual Studio/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.23/Modules/CMakeGenericSystem.cmake
+E:/env/Visual Studio/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.23/Modules/CMakeInitializeConfigs.cmake
+E:/env/Visual Studio/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.23/Modules/CMakeLanguageInformation.cmake
+E:/env/Visual Studio/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.23/Modules/CMakeRCInformation.cmake
+E:/env/Visual Studio/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.23/Modules/CMakeSystemSpecificInformation.cmake
+E:/env/Visual Studio/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.23/Modules/CMakeSystemSpecificInitialize.cmake
+E:/env/Visual Studio/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.23/Modules/Compiler/CMakeCommonCompilerMacros.cmake
+E:/env/Visual Studio/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.23/Modules/Compiler/MSVC-C.cmake
+E:/env/Visual Studio/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.23/Modules/Compiler/MSVC-CXX.cmake
+E:/env/Visual Studio/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.23/Modules/Platform/Windows-MSVC-C.cmake
+E:/env/Visual Studio/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.23/Modules/Platform/Windows-MSVC-CXX.cmake
+E:/env/Visual Studio/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.23/Modules/Platform/Windows-MSVC.cmake
+E:/env/Visual Studio/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.23/Modules/Platform/Windows.cmake
+E:/env/Visual Studio/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.23/Modules/Platform/WindowsPaths.cmake
