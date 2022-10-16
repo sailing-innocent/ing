@@ -16,16 +16,10 @@ ING_NAMESPACE_BEGIN
 
 class BaseApp {
 public:
-    BaseApp() {}
-    virtual BaseApp(BaseApp& rhs) = 0;
-    virtual BaseApp& operator=(BaseApp& rhs) = 0;
-    virtual ~BaseApp() = 0;
-    virtual void Init();
-    virtual void Run();
+    virtual bool Init() = 0;
+    virtual int Run() = 0;
 };
 
 ING_NAMESPACE_END
-
-
 
 #endif // ING_APP_H_

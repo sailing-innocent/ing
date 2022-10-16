@@ -10,7 +10,7 @@
 #include <ing/common.h>
 
 #include <utils/d3dapp_utils.hpp>
-// #include "core/tbTimer.hpp"
+#include <utils/drx/timer.hpp>
 
 ING_NAMESPACE_BEGIN
 
@@ -37,8 +37,8 @@ public:
 protected:
     virtual void CreateRtvAndDsvDescriptorHeaps();
     virtual void OnResize();
-    virtual void Update(const tbTimer& tbt) = 0;
-    virtual void Draw(const tbTimer& tbt) = 0;
+    virtual void Update(const Timer& timer) = 0;
+    virtual void Draw(const Timer& timer) = 0;
 
     // Convience overrides for handling mouse input
     virtual void OnMouseDown(WPARAM btnState, int x, int y) { }
@@ -77,7 +77,7 @@ protected:
     bool m4xMsaaState = false; // true if use 4x Multisampling
     UINT m4xMsaaQuality = 0; // quality level of 4X Multisampling
 
-    tbTimer mTimer;
+    Timer mTimer;
 
     Microsoft::WRL::ComPtr<IDXGIFactory4> mdxgiFactory;
     Microsoft::WRL::ComPtr<IDXGISwapChain> mSwapChain;

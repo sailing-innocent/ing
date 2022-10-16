@@ -1,28 +1,47 @@
-#include <windows.h>
+/**
+ * @file: ing/app/win_pure.cc
+ * @desp: The implementation of pure windows application
+*/
 
-HWND ghMainWnd = 0;
+#include <ing/app/win_pure.hpp>
 
-bool InitWindowsApp(HINSTANCE instanceHandle, int show);
-
-int Run();
-
-LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, int nShowCmd)
+LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-    if (!InitWindowsApp(hInstance, nShowCmd))
-        return 0;
-    return Run();
+    switch(msg)
+    {
+        case WM_KEYDOWN:
+            if (wParam == VK_ESCAPE)
+                DestroyWindow(hWnd);
+            return 0;
+        case WM_DESTROY:
+            PostQuitMessage(0);
+            return 0;
+        case WM_PAINT:
+            {
+                PAINTSTRUCT ps;
+                HDC hdc = BeginPaint(hWnd, &ps);
+
+                // All painting occurs here, between BeginPaint and EndPaint.
+                FillRect(hdc, &ps.rcPaint, (HBRUSH)GetStockObject(BLACK_BRUSH));
+                EndPaint(hWnd, &ps);
+                return 0;
+            }
+
+    }
+
+    return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 
-bool InitWindowsApp(HINSTANCE instanceHandle, int show)
-{
+
+ING_NAMESPACE_BEGIN
+
+bool PureWinApp::Init() {
     WNDCLASS wc;
     wc.style = CS_HREDRAW | CS_VREDRAW;
     wc.lpfnWndProc = WndProc;
     wc.cbClsExtra = 0;
     wc.cbWndExtra = 0;
-    wc.hInstance = instanceHandle;
+    wc.hInstance = mInstanceHandle;
     wc.hIcon = LoadIcon(0, IDI_APPLICATION);
     wc.hCursor = LoadCursor(0, IDC_ARROW);
     wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
@@ -34,7 +53,7 @@ bool InitWindowsApp(HINSTANCE instanceHandle, int show)
         return false;
     }
 
-    ghMainWnd = CreateWindow(
+    mGhMainWnd = CreateWindow(
         L"BasicWndClass",
         L"Wnd32Basic",
         WS_OVERLAPPEDWINDOW,
@@ -44,24 +63,23 @@ bool InitWindowsApp(HINSTANCE instanceHandle, int show)
         CW_USEDEFAULT,
         0,
         0,
-        instanceHandle,
+        mInstanceHandle,
         0
     );
 
-    if (ghMainWnd == 0) 
+    if (mGhMainWnd == 0) 
     {
         MessageBox(0, L"CreateWindow FAILED", 0, 0);
         return false;
     }
 
-    ShowWindow(ghMainWnd, show);
-    UpdateWindow(ghMainWnd);
+    ShowWindow(mGhMainWnd, mShow);
+    UpdateWindow(mGhMainWnd);
 
     return true;
 }
 
-int Run()
-{
+int PureWinApp::Run() {
     MSG msg = {0};
 
     BOOL bRet = 1;
@@ -82,18 +100,4 @@ int Run()
     return (int)msg.wParam;
 }
 
-LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
-{
-    switch(msg)
-    {
-        case WM_KEYDOWN:
-            if (wParam == VK_ESCAPE)
-                DestroyWindow(hWnd);
-            return 0;
-        case WM_DESTROY:
-            PostQuitMessage(0);
-            return 0;
-    }
-
-    return DefWindowProc(hWnd, msg, wParam, lParam);
-}
+ING_NAMESPACE_END

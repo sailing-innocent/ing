@@ -17,14 +17,15 @@ ING_NAMESPACE_BEGIN
 class PureWinApp: public BaseApp
 {
 public:
-    PureWinApp(): BaseApp() {}
-    virtual PureWinApp(PureWinApp& rhs) = delete;
-    virtual PureWinApp& operator=(PureWinApp& rhs) = delete;
-    virtual ~PureWinApp() override;
-    virtual void Init() override;
-    virtual void Run() override;
+    PureWinApp(HINSTANCE instanceHandle, int show):
+        mInstanceHandle(instanceHandle),
+        mShow(show) {}
+    virtual bool Init() override;
+    virtual int Run() override;
 private:
-    HWND mHWND;
+    HINSTANCE mInstanceHandle;
+    int mShow;
+    HWND mGhMainWnd = 0;
 };
 
 ING_NAMESPACE_END

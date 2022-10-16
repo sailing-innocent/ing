@@ -3,8 +3,8 @@
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, int nShowCmd)
 {
-    ing::PureWinApp app;
-    if (!app.Init(hInstance, nShowCmd))
+    ing::PureWinApp app(hInstance, nShowCmd);
+    if (!app.Init())
         return 0;
     return app.Run();
 }

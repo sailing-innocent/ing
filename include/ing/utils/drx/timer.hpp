@@ -2,7 +2,9 @@
 #ifndef ING_TIMER_H
 #define ING_TIMER_H
 
-#include <common.hpp>
+#include <ing/common.h>
+
+ING_NAMESPACE_BEGIN
 
 class Timer {
 public:
@@ -26,5 +28,7 @@ private:
 
     bool mStopped;
 };
+
+ING_NAMESPACE_END
 
 #endif // ING_TIMER_H

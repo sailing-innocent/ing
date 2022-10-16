@@ -19,7 +19,7 @@
 #include <fstream>
 #include <sstream>
 #include <cassert>
-#include "utils/d3dx12.h"
+#include "ing/utils/drx/d3dx12.h"
 // #include "DDSTextureLoader.h"
 // #include "MathHelper.h"
 
