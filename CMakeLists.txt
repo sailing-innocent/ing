@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 project(ing VERSION 0.1)
 
 set(TEST TRUE)
+set(PURE_GL FALSE)
 set(IMGUI_DRX FALSE)
 set(BUILD_BASIC FALSE)
 set(BUILD_CV FALSE)
@@ -12,7 +13,7 @@ if(MSVC)
 else()
 endif()
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
@@ -32,6 +33,26 @@ list(APPEND ING_INCLUDE_DIR
 )
 
 if(${TEST})
+    list(APPEND ING_INCLUDE_DIR
+        "E:/sdk/Vulkan/Include"
+    )
+    list(APPEND ING_LIBS_DIR
+        "E:/libs/glfw"
+        "E:/sdk/Vulkan/Lib"
+    )
+    list(APPEND ING_LIBS
+        "glfw3"
+        "vulkan-1"
+    )
+    list(APPEND ING_SOURCE
+        "examples/static/vk_hello_main.cc"
+        "ing/app/win_vulkan/vk_hello.cc"
+    )
+    add_executable(ing ${ING_SOURCE})
+    target_link_directories(ing PUBLIC ${ING_LIBS_DIR})
+    target_link_libraries(ing PUBLIC ${ING_LIBS})
+    target_include_directories(ing PUBLIC ${ING_INCLUDE_DIR})
+elseif(${PURE_GL})
     list(APPEND ING_LIBS_DIR
         "E:/libs/glfw"
     )
@@ -46,7 +67,6 @@ if(${TEST})
     target_link_directories(ing PUBLIC ${ING_LIBS_DIR})
     target_link_libraries(ing PUBLIC ${ING_LIBS})
     target_include_directories(ing PUBLIC ${ING_INCLUDE_DIR})
-
 elseif(${IMGUI_DRX})
     set(IMGUI_DIR "E:/source/imgui")
     list(APPEND IMGUI_SOURCE
