@@ -41,55 +41,20 @@ void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& create
 }
 
 
-struct QueueFamilyIndices {
-    std::optional<uint32_t> graphicsFamily;
-
-    bool isComplete() {
-        return graphicsFamily.has_value();
+static std::vector<char> readFile(const std::string& filename) {
+    std::ifstream file(filename, std::ios::ate | std::ios::binary);
+    if (!file.is_open()) {
+        throw std::runtime_error("failed to open file!");
     }
-};
+    size_t fileSize = (size_t) file.tellg();
+    std::vector<char> buffer(fileSize);
 
-QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device) {
-    QueueFamilyIndices indices;
-    // Assign index to queue family that could be found
-    uint32_t queueFamilyCount = 0;
-    vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
-    std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
-    vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
-    
+    file.seekg(0);
+    file.read(buffer.data(), fileSize);
 
-    // find at least one queue family that support `VK_QUEUE_GRAPHICS_BIT`
-    int i = 0;
-    for (const auto& queueFamily: queueFamilies) {
-        if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
-            indices.graphicsFamily = i;
-        }
-        if (!indices.isComplete()) {
-            break;
-        }
-        i++;
-    }
-    
-    return indices;
+    file.close();
+    return buffer;
 }
-
-bool isDeviceSuitable(VkPhysicalDevice device) {
-    /*
-    // name, type and supported Vulkan version
-    VkPhysicalDeviceProperties deviceProperties;
-    vkGetPhysicalDeviceProperties(device, &deviceProperties);
-    
-    // texture compression, 64 bit floats and multi viewport rendering (useful for VR)
-    VkPhysicalDeviceFeatures deviceFeatures;
-    vkGetPhysicalDeviceFeatures(device, &deviceFeatures);
-
-    return deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU &&
-        deviceFeatures.geometryShader;
-    */
-    QueueFamilyIndices indices = findQueueFamilies(device);
-    return indices.isComplete();
-}
-
 
 ING_NAMESPACE_END
 

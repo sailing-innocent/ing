@@ -31,6 +31,17 @@ private:
     void setupDebugMessenger();
     void pickPhysicalDevice();
     void createLogicalDevice();
+    void createSurface();
+    void createSwapChain();
+    void createImageViews();
+    void createRenderPass();
+    void createGraphicsPipeline();
+    void createFramebuffers();
+    void createCommandPool();
+    void createCommandBuffer();
+    void createSyncObjects();
+
+    void drawFrame();
 
 private:
 // utils methods
@@ -46,6 +57,15 @@ private:
             }
             return VK_FALSE;
         }
+    QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
+    bool isDeviceSuitable(VkPhysicalDevice device);
+    bool checkDeviceExtensionSupport(VkPhysicalDevice device);
+    SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device);
+    VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
+    VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
+    VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
+    VkShaderModule createShaderModule(const std::vector<char>& code);
+    void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
 
 private:
     GLFWwindow* mWindow = NULL;
@@ -60,7 +80,27 @@ private:
 
     VkPhysicalDevice mPhysicalDevice = VK_NULL_HANDLE; // Physical Device Handle
     VkDevice mDevice; // Logical Device
-    VkQueue mGraphicsQueue;
+    VkQueue mGraphicsQueue; // Directly fetch graphics queue
+    VkSurfaceKHR mSurface; // On windows it is called VK_KHR_win32_surface; glfwGetRequiredInstanceExtensions
+    VkQueue mPresentQueue; // Present Queue
+
+    const std::vector<const char*> mDeviceExtensions = {
+        VK_KHR_SWAPCHAIN_EXTENSION_NAME
+    };
+
+    VkSwapchainKHR mSwapChain;
+    std::vector<VkImage> mSwapChainImages;
+    VkFormat mSwapChainImageFormat;
+    VkExtent2D mSwapChainExtent;
+    std::vector<VkImageView> mSwapChainImageViews;
+
+    VkRenderPass mRenderPass;
+    VkPipelineLayout mPipelineLayout;
+    VkPipeline mGraphicsPipeline;
+
+    std::vector<VkFramebuffer> mSwapChainFramebuffers;
+    VkCommandPool mCommandPool;
+    VkCommandBuffer mCommandBuffer;
 
 #ifdef NDEBUG
     bool mEnableValidationLayers = false;
@@ -68,6 +108,9 @@ private:
     bool mEnableValidationLayers = true;
 #endif
 
+    VkSemaphore mImageAvailableSemaphore;
+    VkSemaphore mRenderFinishedSemaphore;
+    VkFence mInFlightFence;
 };
 
 ING_NAMESPACE_END
