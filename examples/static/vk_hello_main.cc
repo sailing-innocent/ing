@@ -1,9 +1,5 @@
 #include <ing/app/vk_hello.hpp>
 
-#include <iostream>
-#include <stdexcept>
-#include <cstdlib>
-
 using namespace ing;
 
 int main() {
