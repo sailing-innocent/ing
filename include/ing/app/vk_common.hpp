@@ -14,6 +14,7 @@
 #include <stdexcept>
 #include <cstdlib>
 #include <vector>
+#include <optional>
 
 #include <vulkan/vulkan.h>
 #define GLFW_INCLUDE_VULKAN

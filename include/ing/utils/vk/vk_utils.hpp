@@ -40,6 +40,39 @@ void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& create
     createInfo.pUserData = nullptr; // Optional
 }
 
+
+struct QueueFamilyIndices {
+    std::optional<uint32_t> graphicsFamily;
+
+    bool isComplete() {
+        return graphicsFamily.has_value();
+    }
+};
+
+QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device) {
+    QueueFamilyIndices indices;
+    // Assign index to queue family that could be found
+    uint32_t queueFamilyCount = 0;
+    vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
+    std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+    vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
+    
+
+    // find at least one queue family that support `VK_QUEUE_GRAPHICS_BIT`
+    int i = 0;
+    for (const auto& queueFamily: queueFamilies) {
+        if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
+            indices.graphicsFamily = i;
+        }
+        if (!indices.isComplete()) {
+            break;
+        }
+        i++;
+    }
+    
+    return indices;
+}
+
 bool isDeviceSuitable(VkPhysicalDevice device) {
     /*
     // name, type and supported Vulkan version
@@ -53,8 +86,10 @@ bool isDeviceSuitable(VkPhysicalDevice device) {
     return deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU &&
         deviceFeatures.geometryShader;
     */
-    return true;
+    QueueFamilyIndices indices = findQueueFamilies(device);
+    return indices.isComplete();
 }
+
 
 ING_NAMESPACE_END
 

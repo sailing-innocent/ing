@@ -19,6 +19,7 @@ void HelloTriangleApplication::mainLoop()
 
 void HelloTriangleApplication::cleanup()
 {
+    vkDestroyDevice(mDevice, nullptr);
     if (mEnableValidationLayers) {
         DestroyDebugUtilsMessengerEXT(mInstance, mDebugMessenger, nullptr);
     }
@@ -150,6 +151,43 @@ void HelloTriangleApplication::pickPhysicalDevice()
     if (mPhysicalDevice == VK_NULL_HANDLE) {
         throw std::runtime_error("failed to find a suitable GPU!");
     }
+}
+
+void HelloTriangleApplication::createLogicalDevice()
+{
+    QueueFamilyIndices indices = findQueueFamilies(mPhysicalDevice);
+    // now we are only interested in a queue with graphics capabilities
+    VkDeviceQueueCreateInfo queueCreateInfo{};
+    queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+    queueCreateInfo.queueFamilyIndex = indices.graphicsFamily.value();
+    queueCreateInfo.queueCount = 1;
+
+    float queuePriority = 1.0f;
+    queueCreateInfo.pQueuePriorities = &queuePriority;
+
+    // set of device features we will be using
+    VkPhysicalDeviceFeatures deviceFeatures{};
+    // Creating the logical device
+    VkDeviceCreateInfo createInfo{};
+    createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+    createInfo.pQueueCreateInfos = &queueCreateInfo;
+    createInfo.queueCreateInfoCount = 1;
+
+    createInfo.pEnabledFeatures = &deviceFeatures;
+    createInfo.enabledExtensionCount = 0;
+
+    if (mEnableValidationLayers) {
+        createInfo.enabledLayerCount = static_cast<uint32_t>(mValidationLayers.size());
+        createInfo.ppEnabledLayerNames = mValidationLayers.data();
+    } else {
+        createInfo.enabledLayerCount = 0;
+    }
+
+    if (vkCreateDevice(mPhysicalDevice, &createInfo, nullptr, &mDevice) != VK_SUCCESS) {
+        throw std::runtime_error("failed to create logical device!");
+    }
+
+    vkGetDeviceQueue(mDevice, indices.graphicsFamily.value(), 0, &mGraphicsQueue);
 }
 
 ING_NAMESPACE_END

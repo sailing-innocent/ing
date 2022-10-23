@@ -30,6 +30,7 @@ private:
     void createInstance();
     void setupDebugMessenger();
     void pickPhysicalDevice();
+    void createLogicalDevice();
 
 private:
 // utils methods
@@ -57,7 +58,9 @@ private:
         "VK_LAYER_KHRONOS_validation"
     };
 
-    VkPhysicalDevice mPhysicalDevice = VK_NULL_HANDLE;
+    VkPhysicalDevice mPhysicalDevice = VK_NULL_HANDLE; // Physical Device Handle
+    VkDevice mDevice; // Logical Device
+    VkQueue mGraphicsQueue;
 
 #ifdef NDEBUG
     bool mEnableValidationLayers = false;
