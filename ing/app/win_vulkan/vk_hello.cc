@@ -31,6 +31,7 @@ void HelloTriangleApplication::initVulkan()
 {
     createInstance();
     setupDebugMessenger();
+    pickPhysicalDevice();
 }
 
 void HelloTriangleApplication::createInstance()
@@ -123,6 +124,31 @@ void HelloTriangleApplication::setupDebugMessenger()
     createInfo.pfnUserCallback = debugCallback;
     if (CreateDebugUtilsMessengerEXT(mInstance, &createInfo, nullptr, &mDebugMessenger) != VK_SUCCESS) {
         throw std::runtime_error("failed to set up debug messenger!");
+    }
+}
+
+void HelloTriangleApplication::pickPhysicalDevice()
+{
+    // listing the graphics cards is very similiar to listing extensions and starts with querying just the number
+    uint32_t deviceCount = 0;
+    vkEnumeratePhysicalDevices(mInstance, &deviceCount, nullptr);
+    if (deviceCount == 0) {
+        throw std::runtime_error("failed to find GPUs with Vulkan support!");
+    }
+    std::vector<VkPhysicalDevice> devices(deviceCount);
+    vkEnumeratePhysicalDevices(mInstance, &deviceCount, devices.data());
+
+    // now we only choose device 0
+    for (const auto& device: devices) {
+        if (isDeviceSuitable(device)) {
+            mPhysicalDevice = device;
+            break;
+        }
+    }
+    // you can also give each device a score and check the highest one
+
+    if (mPhysicalDevice == VK_NULL_HANDLE) {
+        throw std::runtime_error("failed to find a suitable GPU!");
     }
 }
 

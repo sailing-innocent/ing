@@ -40,6 +40,22 @@ void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& create
     createInfo.pUserData = nullptr; // Optional
 }
 
+bool isDeviceSuitable(VkPhysicalDevice device) {
+    /*
+    // name, type and supported Vulkan version
+    VkPhysicalDeviceProperties deviceProperties;
+    vkGetPhysicalDeviceProperties(device, &deviceProperties);
+    
+    // texture compression, 64 bit floats and multi viewport rendering (useful for VR)
+    VkPhysicalDeviceFeatures deviceFeatures;
+    vkGetPhysicalDeviceFeatures(device, &deviceFeatures);
+
+    return deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU &&
+        deviceFeatures.geometryShader;
+    */
+    return true;
+}
+
 ING_NAMESPACE_END
 
 #endif // ING_UTILS_VULKAN_H_

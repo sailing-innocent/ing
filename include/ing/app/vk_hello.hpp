@@ -29,6 +29,7 @@ private:
 
     void createInstance();
     void setupDebugMessenger();
+    void pickPhysicalDevice();
 
 private:
 // utils methods
@@ -55,6 +56,8 @@ private:
     const std::vector<const char*> mValidationLayers = {
         "VK_LAYER_KHRONOS_validation"
     };
+
+    VkPhysicalDevice mPhysicalDevice = VK_NULL_HANDLE;
 
 #ifdef NDEBUG
     bool mEnableValidationLayers = false;
