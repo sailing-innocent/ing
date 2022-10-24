@@ -9,7 +9,6 @@
 #define ING_APP_VK_HELLO_H_
 
 #include <ing/app/vk_common.hpp>
-#include <glm/glm.hpp>
 
 ING_NAMESPACE_BEGIN
 
