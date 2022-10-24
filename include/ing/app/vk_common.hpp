@@ -119,6 +119,9 @@ protected:
     VkCommandPool mCommandPool;
     VkCommandBuffer mCommandBuffer;
 
+    VkBuffer mVertexBuffer;
+    VkDeviceMemory mVertexBufferMemory;
+
 #ifdef NDEBUG
     bool mEnableValidationLayers = false;
 #else

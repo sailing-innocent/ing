@@ -13,6 +13,7 @@
 
 ING_NAMESPACE_BEGIN
 
+
 struct Vertex {
     glm::vec2 pos;
     glm::vec3 color;
@@ -47,12 +48,29 @@ struct Vertex {
     }
 };
 
+const std::vector<Vertex> vertices = {
+    {{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+    {{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
+    {{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}} 
+};
+
+
 class HelloTriangleApplication: public VkCommonApp {
 public:
     void init();
+    void run();
+    void terminate();
 protected:
     void initVulkan();
+    void cleanup();
+    void mainLoop();
     void createGraphicsPipeline();
+    void createVertexBuffer();
+    void drawFrame();
+
+protected:
+    uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+    void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
 };
 
 ING_NAMESPACE_END
