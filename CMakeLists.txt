@@ -45,8 +45,10 @@ if(${TEST})
         "vulkan-1"
     )
     list(APPEND ING_SOURCE
-        "examples/static/vk_hello_main.cc"
+        "ing/utils/vk_utils.cc"
+        "ing/app/win_vulkan/vk_common.cc"
         "ing/app/win_vulkan/vk_hello.cc"
+        "examples/static/vk_hello_main.cc"
     )
     add_executable(ing ${ING_SOURCE})
     target_link_directories(ing PUBLIC ${ING_LIBS_DIR})
