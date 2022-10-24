@@ -48,7 +48,8 @@ if(${TEST})
         "ing/utils/vk_utils.cc"
         "ing/app/win_vulkan/vk_common.cc"
         "ing/app/win_vulkan/vk_hello.cc"
-        "examples/static/vk_hello_main.cc"
+        "ing/app/win_vulkan/vk_canvas.cc"
+        "examples/static/vk_canvas_main.cc"
     )
     add_executable(ing ${ING_SOURCE})
     target_link_directories(ing PUBLIC ${ING_LIBS_DIR})

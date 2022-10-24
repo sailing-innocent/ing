@@ -89,8 +89,8 @@ protected:
 
 protected:
     GLFWwindow* mWindow = NULL;
-    const uint32_t mWidth = 800; // in pixel
-    const uint32_t mHeight = 600; // in pixel
+    const uint32_t mWidth = 1600; // in pixel
+    const uint32_t mHeight = 1200; // in pixel
     VkInstance mInstance;
     VkDebugUtilsMessengerEXT mDebugMessenger;
 

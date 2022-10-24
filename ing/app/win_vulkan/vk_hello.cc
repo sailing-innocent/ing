@@ -113,7 +113,7 @@ void HelloTriangleApplication::recordCommandBuffer(VkCommandBuffer commandBuffer
     scissor.extent = mSwapChainExtent;
     vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 
-    vkCmdDraw(commandBuffer, static_cast<uint32_t>(vertices.size()), 1, 0, 0); // vertex count, instance count, first vertex, fisrt instance
+    vkCmdDraw(commandBuffer, static_cast<uint32_t>(mVertices.size()), 1, 0, 0); // vertex count, instance count, first vertex, fisrt instance
     vkCmdEndRenderPass(commandBuffer);
     if (vkEndCommandBuffer(commandBuffer)!= VK_SUCCESS) {
         throw std::runtime_error("failed to record command buffer!");
@@ -146,7 +146,7 @@ void HelloTriangleApplication::initVulkan()
 
 void HelloTriangleApplication::createVertexBuffer()
 {
-    VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
+    VkDeviceSize bufferSize = sizeof(mVertices[0]) * mVertices.size();
     VkBuffer stagingBuffer;
     VkDeviceMemory stagingBufferMemory;
     createBuffer(bufferSize, 
@@ -158,7 +158,7 @@ void HelloTriangleApplication::createVertexBuffer()
     // copy the data
     void* data;
     vkMapMemory(mDevice, stagingBufferMemory, 0, bufferSize, 0, &data);
-    memcpy(data, vertices.data(), (size_t) bufferSize);
+    memcpy(data, mVertices.data(), (size_t) bufferSize);
     vkUnmapMemory(mDevice, stagingBufferMemory);
     
     createBuffer(bufferSize,

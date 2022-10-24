@@ -48,13 +48,6 @@ struct Vertex {
     }
 };
 
-const std::vector<Vertex> vertices = {
-    {{0.0f, -0.5f}, {1.0f, 1.0f, 1.0f}},
-    {{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
-    {{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}} 
-};
-
-
 class HelloTriangleApplication: public VkCommonApp {
 public:
     void init();
@@ -74,6 +67,12 @@ protected:
 protected:
     VkBuffer mVertexBuffer;
     VkDeviceMemory mVertexBufferMemory;
+    
+    const std::vector<Vertex> mVertices = {
+        {{0.0f, -0.5f}, {1.0f, 1.0f, 1.0f}},
+        {{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
+        {{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}} 
+    };
 };
 
 ING_NAMESPACE_END
