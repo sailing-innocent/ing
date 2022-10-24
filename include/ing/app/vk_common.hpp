@@ -83,6 +83,9 @@ protected:
     VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
     VkShaderModule createShaderModule(const std::vector<char>& code);
     void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
+    void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
+    uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+    void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size0);
 
 protected:
     GLFWwindow* mWindow = NULL;
@@ -118,9 +121,6 @@ protected:
     std::vector<VkFramebuffer> mSwapChainFramebuffers;
     VkCommandPool mCommandPool;
     VkCommandBuffer mCommandBuffer;
-
-    VkBuffer mVertexBuffer;
-    VkDeviceMemory mVertexBufferMemory;
 
 #ifdef NDEBUG
     bool mEnableValidationLayers = false;
