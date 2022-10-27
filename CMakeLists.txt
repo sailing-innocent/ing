@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 project(ing VERSION 0.1)
 
 set(TEST TRUE)
+set(APP_VULKAN FALSE)
 set(PURE_GL FALSE)
 set(IMGUI_DRX FALSE)
 set(BUILD_BASIC FALSE)
@@ -33,6 +34,12 @@ list(APPEND ING_INCLUDE_DIR
 )
 
 if(${TEST})
+    list(APPEND ING_SOURCE
+        "examples/geometry/mygeotest.cc"   
+    )
+    add_executable(ing ${ING_SOURCE})
+    target_include_directories(ing PUBLIC ${ING_INCLUDE_DIR})
+elseif(${APP_VULKAN})
     list(APPEND ING_INCLUDE_DIR
         "E:/sdk/Vulkan/Include"
     )
@@ -49,9 +56,9 @@ if(${TEST})
         "ing/app/win_vulkan/vk_common.cc"
         "ing/app/win_vulkan/vk_hello.cc"
         "ing/app/win_vulkan/vk_canvas.cc"
-        "ing/app/win_vulkan/vk_scene.cc"
-        # "examples/static/vk_canvas_main.cc"
-        "examples/static/vk_scene_main.cc"
+        #"ing/app/win_vulkan/vk_scene.cc"
+        "examples/static/vk_canvas_main.cc"
+        #"examples/static/vk_scene_main.cc"
     )
     add_executable(ing ${ING_SOURCE})
     target_link_directories(ing PUBLIC ${ING_LIBS_DIR})
