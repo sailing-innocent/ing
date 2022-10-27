@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.10)
 
 project(ing VERSION 0.1)
 
-set(TEST TRUE)
-set(APP_VULKAN FALSE)
+set(TEST FALSE)
+set(APP_VULKAN TRUE)
 set(PURE_GL FALSE)
 set(IMGUI_DRX FALSE)
 set(BUILD_BASIC FALSE)

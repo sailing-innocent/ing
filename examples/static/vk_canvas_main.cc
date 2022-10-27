@@ -4,9 +4,11 @@ using namespace ing;
 
 int main() {
     CanvasApp app;
-    
+
     try {
         app.init();
+        // app.getVertices(INGVertices) // Convert to its inner vertices
+        
         app.run();
         app.terminate();
     } catch (const std::exception& e) {

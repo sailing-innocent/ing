@@ -13,28 +13,14 @@
 
 ING_NAMESPACE_BEGIN
 
-
-//________SHOULD_BE_GENERATED_BY_GEOMETRY_PART_LATER______
-
-const std::vector<Vertex> tempVertices = {
-    {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
-    {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
-    {{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
-    {{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}
-};
-
-const std::vector<uint16_t> tempIndices = {
-    0, 1, 2, 2, 3, 0
-};
-
-// ______________________________________________________
-
 class CanvasApp: public HelloTriangleApplication
 {
 public:
     void init();
     void run();
     void terminate();
+    // void setVertices(std::vector<INGVertex>& vertices);
+    // void setIndices(std::vector<uint32_t>& indices);
 protected:
     void initVulkan();
     void cleanup();
@@ -47,11 +33,11 @@ protected:
 protected:
     VkBuffer mIndexBuffer;
     VkDeviceMemory mIndexBufferMemory;
-    const std::vector<Vertex> mVertices = {
-        {{-0.9f, -0.9f}, {1.0f, 0.0f, 0.0f}},
-        {{0.9f, -0.9f}, {0.0f, 1.0f, 0.0f}},
-        {{0.9f, 0.9f}, {0.0f, 0.0f, 1.0f}},
-        {{-0.9f, 0.9f}, {1.0f, 1.0f, 1.0f}}
+    const std::vector<VkOutVertex> mVertices = {
+        {{-0.5f, -0.5f, 0.0f, 1.0f}, {1.0f, 0.0f, 0.0f, 1.0f}},
+        {{0.5f, -0.5f, 0.0f, 1.0f}, {0.0f, 1.0f, 0.0f, 1.0f}},
+        {{0.5f, 0.5f, 0.0f, 1.0f}, {0.0f, 0.0f, 1.0f, 1.0f}},
+        {{-0.5f, 0.5f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f, 1.0f}}
     };
     const std::vector<uint16_t> mIndices = {
         0, 1, 2, 2, 3, 0

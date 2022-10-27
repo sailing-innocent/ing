@@ -9,27 +9,24 @@
  * @desp: The Entry for ING Geometry Part
 */
 
+
+/**
+ * For Drawing Purpose, the geometry library of ing will
+ * consider few on mathematical definitions of geometries and will only use the 
+ * most common lines and triangles 
+ * */ 
+
 #include <ing/common.h>
 #include <vector>
 #include <iostream>
 
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+
 ING_NAMESPACE_BEGIN
 
-typedef double INGCoord;
-
-class INGGeoNode: public INGNode {
-public:
-    INGGeoNode() = default;
-    virtual ~INGGeoNode() {}
-    virtual size_t size() { return mSize; }
-    virtual INGCoord& operator[](size_t index) { return mCoord[index]; }
-protected:
-    size_t mSize = 0;
-    std::vector<INGCoord> mCoord;
-};
-
 ING_NAMESPACE_END
-
-#include <ing/geometry/point.h>
 
 #endif // ING_GEOMETRY_H_
