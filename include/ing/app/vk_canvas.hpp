@@ -19,8 +19,8 @@ public:
     void init();
     void run();
     void terminate();
-    // void setVertices(std::vector<INGVertex>& vertices);
-    // void setIndices(std::vector<uint32_t>& indices);
+    bool setVertex(std::vector<float> vfloat, size_t size);
+    bool setIndex(std::vector<uint16_t> vu16, size_t size);
 protected:
     void initVulkan();
     void cleanup();
@@ -33,15 +33,8 @@ protected:
 protected:
     VkBuffer mIndexBuffer;
     VkDeviceMemory mIndexBufferMemory;
-    const std::vector<VkOutVertex> mVertices = {
-        {{-0.5f, -0.5f, 0.0f, 1.0f}, {1.0f, 0.0f, 0.0f, 1.0f}},
-        {{0.5f, -0.5f, 0.0f, 1.0f}, {0.0f, 1.0f, 0.0f, 1.0f}},
-        {{0.5f, 0.5f, 0.0f, 1.0f}, {0.0f, 0.0f, 1.0f, 1.0f}},
-        {{-0.5f, 0.5f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f, 1.0f}}
-    };
-    const std::vector<uint16_t> mIndices = {
-        0, 1, 2, 2, 3, 0
-    };
+    std::vector<VkOutVertex> mVertices = {};
+    std::vector<uint16_t> mIndices = {};
 };
 
 ING_NAMESPACE_END

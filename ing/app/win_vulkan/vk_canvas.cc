@@ -16,6 +16,26 @@ void CanvasApp::run() {
     mainLoop();
 }
 
+bool CanvasApp::setVertex(std::vector<float> vfloat, size_t size) {
+    if (size % 8 != 0) { return false; }
+    mVertices.resize(size);
+    for (auto i = 0; i < size/8; i++) {
+        mVertices[i] = {
+            {vfloat[8*i+0],vfloat[8*i+1],vfloat[8*i+2],vfloat[8*i+3]},
+            {vfloat[8*i+4],vfloat[8*i+5],vfloat[8*i+6],vfloat[8*i+7]}
+        };
+    }
+    return true;
+}
+
+bool CanvasApp::setIndex(std::vector<uint16_t> vu16, size_t size)
+{
+    mIndices.resize(size);
+    for (auto i = 0; i < size; i++) {
+        mIndices[i] = vu16[i];
+    }
+    return true;
+}
 
 void CanvasApp::initVulkan()
 {
