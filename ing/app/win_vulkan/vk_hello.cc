@@ -176,8 +176,8 @@ void HelloTriangleApplication::createVertexBuffer()
 void HelloTriangleApplication::createGraphicsPipeline()
 {
     // std::cout << "Happy Pipeline!" << std::endl;
-    auto vertShaderCode = readFile("assets/shaders/vert.spv");
-    auto fragShaderCode = readFile("assets/shaders/frag.spv");
+    auto vertShaderCode = readFile(mVertShaderPath.c_str());
+    auto fragShaderCode = readFile(mFragShaderPath.c_str());
 
     VkShaderModule vertShaderModule = createShaderModule(vertShaderCode);
     VkShaderModule fragShaderModule = createShaderModule(fragShaderCode);

@@ -2,6 +2,10 @@
 
 ING_NAMESPACE_BEGIN
 
+CanvasApp::CanvasApp(const std::string& _vertShaderPath, const std::string& _fragShaderPath):
+    mVertShaderPath(_vertShaderPath),
+    mFragShaderPath(_fragShaderPath)
+    {}
 void CanvasApp::init()
 {
     VkCommonApp::initWindow();

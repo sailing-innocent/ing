@@ -2,8 +2,9 @@ cmake_minimum_required(VERSION 3.10)
 
 project(ing VERSION 0.1)
 
+set(VK_LIB TRUE)
 set(TEST FALSE)
-set(APP_VULKAN TRUE)
+set(VK_TEST FALSE)
 set(PURE_GL FALSE)
 set(IMGUI_DRX FALSE)
 set(BUILD_BASIC FALSE)
@@ -33,13 +34,7 @@ list(APPEND ING_INCLUDE_DIR
     "E:/includes"
 )
 
-if(${TEST})
-    list(APPEND ING_SOURCE
-        "examples/geometry/mygeotest.cc"   
-    )
-    add_executable(ing ${ING_SOURCE})
-    target_include_directories(ing PUBLIC ${ING_INCLUDE_DIR})
-elseif(${APP_VULKAN})
+if (${VK_LIB})
     list(APPEND ING_INCLUDE_DIR
         "E:/sdk/Vulkan/Include"
     )
@@ -56,15 +51,22 @@ elseif(${APP_VULKAN})
         "ing/app/win_vulkan/vk_common.cc"
         "ing/app/win_vulkan/vk_hello.cc"
         "ing/app/win_vulkan/vk_canvas.cc"
-        #"ing/app/win_vulkan/vk_scene.cc"
-        "examples/static/vk_canvas_main.cc"
-        #"examples/static/vk_scene_main.cc"
+    )
+    # add_executable(ing ${ING_SOURCE})
+    add_library(libing ${ING_SOURCE})
+    target_link_directories(libing PUBLIC ${ING_LIBS_DIR})
+    target_link_libraries(libing PUBLIC ${ING_LIBS})
+    target_include_directories(libing PUBLIC ${ING_INCLUDE_DIR})
+endif()
+
+if(${TEST})
+    list(APPEND ING_SOURCE
+        "examples/geometry/mygeotest.cc"   
     )
     add_executable(ing ${ING_SOURCE})
-    # add_library(ing ${ING_SOURCE})
-    target_link_directories(ing PUBLIC ${ING_LIBS_DIR})
-    target_link_libraries(ing PUBLIC ${ING_LIBS})
     target_include_directories(ing PUBLIC ${ING_INCLUDE_DIR})
+elseif(${VK_TEST})
+
 elseif(${PURE_GL})
     list(APPEND ING_LIBS_DIR
         "E:/libs/glfw"

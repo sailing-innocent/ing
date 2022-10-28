@@ -37,6 +37,8 @@ protected:
         {{0.5f, 0.5f, 0.0f, 1.0f}, {0.0f, 1.0f, 0.0f, 1.0f}},
         {{-0.5f, 0.5f, 0.0f, 1.0f}, {0.0f, 0.0f, 1.0f, 1.0f}} 
     };
+    const std::string mVertShaderPath = "E:/assets/shaders/basic/vert.spv";
+    const std::string mFragShaderPath = "E:/assets/shaders/basic/frag.spv";
 };
 
 ING_NAMESPACE_END

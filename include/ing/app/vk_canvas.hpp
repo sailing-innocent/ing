@@ -16,6 +16,8 @@ ING_NAMESPACE_BEGIN
 class CanvasApp: public HelloTriangleApplication
 {
 public:
+    CanvasApp() = default;
+    CanvasApp(const std::string& _vertShaderPath, const std::string& _fragShaderPath);
     void init();
     void run();
     void terminate();
@@ -35,6 +37,8 @@ protected:
     VkDeviceMemory mIndexBufferMemory;
     std::vector<VkOutVertex> mVertices = {};
     std::vector<uint16_t> mIndices = {};
+    const std::string mVertShaderPath = "E:/assets/shaders/basic/vert.spv";
+    const std::string mFragShaderPath = "E:/assets/shaders/basic/frag.spv";
 };
 
 ING_NAMESPACE_END
