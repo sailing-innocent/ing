@@ -4,7 +4,7 @@ project(ing VERSION 0.1)
 
 set(VK_LIB TRUE)
 set(TEST FALSE)
-set(VK_TEST FALSE)
+set(VK_TEST TRUE)
 set(PURE_GL FALSE)
 set(IMGUI_DRX FALSE)
 set(BUILD_BASIC FALSE)
@@ -51,6 +51,8 @@ if (${VK_LIB})
         "ing/app/win_vulkan/vk_common.cc"
         "ing/app/win_vulkan/vk_hello.cc"
         "ing/app/win_vulkan/vk_canvas.cc"
+        "ing/app/win_vulkan/vk_scene.cc"
+        "ing/core/timer.cc"
     )
     # add_executable(ing ${ING_SOURCE})
     add_library(libing ${ING_SOURCE})
@@ -66,7 +68,14 @@ if(${TEST})
     add_executable(ing ${ING_SOURCE})
     target_include_directories(ing PUBLIC ${ING_INCLUDE_DIR})
 elseif(${VK_TEST})
-
+    list(APPEND ING_EXAMPLE_LIBS
+        ${ING_LIBS}
+        $<TARGET_OBJECTS:libing>
+    )
+    add_executable(ing "examples/static/vk_scene_main.cc")
+    target_link_directories(ing PUBLIC ${ING_LIBS_DIR})
+    target_include_directories(ing PUBLIC ${ING_INCLUDE_DIR})
+    target_link_libraries(ing ${ING_EXAMPLE_LIBS})
 elseif(${PURE_GL})
     list(APPEND ING_LIBS_DIR
         "E:/libs/glfw"

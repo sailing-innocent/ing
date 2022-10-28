@@ -10,6 +10,7 @@
 #define ING_APP_VK_SCENE_H_
 
 #include <ing/app/vk_canvas.hpp>
+#include <ing/core/timer.hpp>
 
 ING_NAMESPACE_BEGIN
 
@@ -24,6 +25,8 @@ struct UniformBufferObject {
 class SceneApp: public CanvasApp
 {
 public:
+    SceneApp() = default;
+    SceneApp(const std::string& _vertShaderPath, const std::string& _fragShaderPath): CanvasApp(_vertShaderPath, _fragShaderPath) {}
     void init();
     void run();
     void terminate();
@@ -37,11 +40,12 @@ protected:
     void createDescriptorPool();
     void createDescriptorSets();
 
-    void drawFrame();
+    void drawFrame(Timer& tmr);
 
 protected:
     void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
-    void updateUniformBuffer(uint32_t currentImage);
+    void updateUniformBuffer(uint32_t currentImage, Timer& tmr, int step);
+    void calculateFrameStats();
 
 protected:
     VkDescriptorSetLayout mDescriptorSetLayout;
@@ -51,7 +55,11 @@ protected:
     std::vector<VkDeviceMemory> mUniformBuffersMemory;
     VkDescriptorPool mDescriptorPool;
     std::vector<VkDescriptorSet> mDescriptorSets;
-    uint32_t currentFrame = 0;
+    uint32_t mCurrentFrame = 0;
+
+    Timer mTimer;
+    bool mAppPaused = false;
+    const float mFPS = 60;
 };
 
 ING_NAMESPACE_END

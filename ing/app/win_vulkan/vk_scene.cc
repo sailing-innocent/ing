@@ -89,6 +89,7 @@ void SceneApp::initVulkan()
     createVertexBuffer();
     createIndexBuffer();
     createUniformBuffers();
+
     createDescriptorPool();
     createDescriptorSets();
 
@@ -117,6 +118,7 @@ void SceneApp::createDescriptorSetLayout()
     uboLayoutBinding.binding = 0;
     uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
     uboLayoutBinding.descriptorCount = 1;
+
     uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
     uboLayoutBinding.pImmutableSamplers = nullptr; // image sampling
 
@@ -132,26 +134,58 @@ void SceneApp::createDescriptorSetLayout()
 
 void SceneApp::mainLoop()
 {
+    const float SPF = 1/mFPS;
+    float t = 0.0;
+    int step = 0;
     while (!glfwWindowShouldClose(mWindow))
     {
         glfwPollEvents();
-        drawFrame();
+        mTimer.Tick();
+        t += mTimer.DeltaTime();
+
+        if ( t > SPF) {
+            if (!mAppPaused) {
+                calculateFrameStats();
+                step++;
+                updateUniformBuffer(mCurrentFrame, mTimer, step);
+            }
+            t = 0.0;
+        } else {
+            drawFrame(mTimer);
+        }
     }
     vkDeviceWaitIdle(mDevice);
 }
 
-void SceneApp::updateUniformBuffer(uint32_t currentImage)
+void SceneApp::calculateFrameStats()
 {
-    static auto startTime = std::chrono::high_resolution_clock::now();
-    
-    auto currentTime = std::chrono::high_resolution_clock::now();
-    float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+    static int frameCnt = 0;
+    static float timeElapsed = 0.0f;
 
+    frameCnt++;
+
+    if ((mTimer.TotalTime() - timeElapsed) > 1.0f)
+    {
+        // update fps 
+        float fps = (float)frameCnt;
+        float mspf = 1000.0f / fps;
+        // set Window Text 
+
+        // reset the next average
+        frameCnt = 0;
+        timeElapsed += 1.0f;
+    }
+}
+
+void SceneApp::updateUniformBuffer(uint32_t currentImage, Timer& tmr, int step)
+{
+    // use stage step and real timer both to control the update uniform buffer 
+    float time = step * 0.02f; // tmr.TotalTime();
     UniformBufferObject ubo{};
     ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
     ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
     ubo.proj = glm::perspective(glm::radians(45.0f), mSwapChainExtent.width / (float) mSwapChainExtent.height, 0.1f, 10.0f);
-    ubo.proj[1][1] *= -1;
+    ubo.proj[1][1] *= -1; // GLM is originally designed for openGL, which y is inverted
 
     void* data;
     vkMapMemory(mDevice, mUniformBuffersMemory[currentImage], 0, sizeof(ubo), 0, &data);
@@ -159,7 +193,7 @@ void SceneApp::updateUniformBuffer(uint32_t currentImage)
     vkUnmapMemory(mDevice, mUniformBuffersMemory[currentImage]);
 }
 
-void SceneApp::drawFrame()
+void SceneApp::drawFrame(Timer& tmr)
 {
     vkWaitForFences(mDevice, 1, &mInFlightFence, VK_TRUE, UINT64_MAX);
     vkResetFences(mDevice, 1, &mInFlightFence);
@@ -169,7 +203,7 @@ void SceneApp::drawFrame()
     vkResetCommandBuffer(mCommandBuffer, 0);
     recordCommandBuffer(mCommandBuffer, imageIndex);
 
-    updateUniformBuffer(currentFrame);
+    // updateUniformBuffer(mCurrentFrame);
     // we can now submit it 
     VkSubmitInfo submitInfo{};
     submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -203,7 +237,7 @@ void SceneApp::drawFrame()
     presentInfo.pResults = nullptr;
     vkQueuePresentKHR(mPresentQueue, &presentInfo);
     
-    currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
+    mCurrentFrame = (mCurrentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
 }
 
 
@@ -221,7 +255,7 @@ void  SceneApp::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imag
     VkRenderPassBeginInfo renderPassInfo{};
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
     renderPassInfo.renderPass = mRenderPass;
-    renderPassInfo.framebuffer = mSwapChainFramebuffers[currentFrame];
+    renderPassInfo.framebuffer = mSwapChainFramebuffers[mCurrentFrame];
     renderPassInfo.renderArea.offset = {0, 0};
     renderPassInfo.renderArea.extent = mSwapChainExtent;
 
@@ -252,7 +286,7 @@ void  SceneApp::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imag
     scissor.extent = mSwapChainExtent;
     vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 
-    vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, mPipelineLayout, 0, 1, &mDescriptorSets[currentFrame], 0, nullptr);
+    vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, mPipelineLayout, 0, 1, &mDescriptorSets[mCurrentFrame], 0, nullptr);
     // vkCmdDraw(commandBuffer, static_cast<uint32_t>(mVertices.size()), 1, 0, 0); // vertex count, instance count, first vertex, fisrt instance
     vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(mIndices.size()), 1, 0, 0, 0);
     vkCmdEndRenderPass(commandBuffer);
@@ -277,6 +311,7 @@ void SceneApp::cleanup()
         vkDestroyImageView(mDevice, imageView, nullptr);
     }
     vkDestroySwapchainKHR(mDevice, mSwapChain, nullptr);
+    // clearup Swapchain
 
     for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
         vkDestroyBuffer(mDevice, mUniformBuffers[i], nullptr);
@@ -304,8 +339,8 @@ void SceneApp::cleanup()
 void SceneApp::createGraphicsPipeline()
 {
     // std::cout << "Happy Pipeline!" << std::endl;
-    auto vertShaderCode = readFile("assets/shaders/vert.spv");
-    auto fragShaderCode = readFile("assets/shaders/frag.spv");
+    auto vertShaderCode = readFile(mVertShaderPath);
+    auto fragShaderCode = readFile(mFragShaderPath);
 
     VkShaderModule vertShaderModule = createShaderModule(vertShaderCode);
     VkShaderModule fragShaderModule = createShaderModule(fragShaderCode);
@@ -336,8 +371,8 @@ void SceneApp::createGraphicsPipeline()
 
     VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
     vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-    auto bindingDescription = Vertex::getBindingDescription();
-    auto attributeDescriptions = Vertex::getAttributeDescriptions();
+    auto bindingDescription = VkOutVertex::getBindingDescription();
+    auto attributeDescriptions = VkOutVertex::getAttributeDescriptions();
     vertexInputInfo.vertexBindingDescriptionCount = 1;
     vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size());
     vertexInputInfo.pVertexBindingDescriptions = &bindingDescription;
