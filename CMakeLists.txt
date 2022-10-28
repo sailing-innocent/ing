@@ -61,6 +61,7 @@ elseif(${APP_VULKAN})
         #"examples/static/vk_scene_main.cc"
     )
     add_executable(ing ${ING_SOURCE})
+    # add_library(ing ${ING_SOURCE})
     target_link_directories(ing PUBLIC ${ING_LIBS_DIR})
     target_link_libraries(ing PUBLIC ${ING_LIBS})
     target_include_directories(ing PUBLIC ${ING_INCLUDE_DIR})
