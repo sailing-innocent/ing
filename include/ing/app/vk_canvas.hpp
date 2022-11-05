@@ -29,6 +29,7 @@ protected:
     void mainLoop();
     void createVertexBuffer();
     void createIndexBuffer();
+    void createGraphicsPipeline();
     void drawFrame();
 protected:
     void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
@@ -37,8 +38,8 @@ protected:
     VkDeviceMemory mIndexBufferMemory;
     std::vector<VkOutVertex> mVertices = {};
     std::vector<uint16_t> mIndices = {};
-    const std::string mVertShaderPath = "E:/assets/shaders/basic/vert.spv";
-    const std::string mFragShaderPath = "E:/assets/shaders/basic/frag.spv";
+    std::string mVertShaderPath = "E:/assets/shaders/canvas/vert.spv";
+    std::string mFragShaderPath = "E:/assets/shaders/canvas/frag.spv";
 };
 
 ING_NAMESPACE_END
