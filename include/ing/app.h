@@ -11,13 +11,17 @@
 #define ING_APP_H_
 
 #include <ing/common.h>
+#include <string>
+#include <vector>
+#include <iostream>
 
 ING_NAMESPACE_BEGIN
 
-class BaseApp {
+class INGBaseApp {
 public:
-    virtual bool Init() = 0;
-    virtual int Run() = 0;
+    virtual void init() = 0;
+    virtual void run() = 0;
+    virtual void terminate() = 0;
 };
 
 ING_NAMESPACE_END

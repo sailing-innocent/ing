@@ -86,7 +86,7 @@ elseif(${PURE_GL})
     list(APPEND ING_SOURCE
         "E:/source/glad/glad.c"
         "examples/static/gl_app.cc"
-        "ing/app/win_gl/glcommon.cc"
+        "ing/app/win_gl/gl_common.cc"
         "ing/utils/gl_utils.cc"
     )
     add_executable(ing ${ING_SOURCE})
