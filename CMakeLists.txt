@@ -2,10 +2,10 @@ cmake_minimum_required(VERSION 3.10)
 
 project(ing VERSION 0.1)
 
-set(VK_LIB TRUE)
+set(VK_LIB FALSE)
 set(TEST FALSE)
-set(VK_TEST TRUE)
-set(PURE_GL FALSE)
+set(VK_TEST FALSE)
+set(PURE_GL TRUE)
 set(IMGUI_DRX FALSE)
 set(BUILD_BASIC FALSE)
 set(BUILD_CV FALSE)
@@ -85,7 +85,9 @@ elseif(${PURE_GL})
     )
     list(APPEND ING_SOURCE
         "E:/source/glad/glad.c"
-        "examples/plain/pure_gl.cc"
+        "examples/static/gl_app.cc"
+        "ing/app/win_gl/glcommon.cc"
+        "ing/utils/gl_utils.cc"
     )
     add_executable(ing ${ING_SOURCE})
     target_link_directories(ing PUBLIC ${ING_LIBS_DIR})
