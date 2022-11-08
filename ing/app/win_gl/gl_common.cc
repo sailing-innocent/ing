@@ -43,22 +43,6 @@ void GLCommonApp::initGL() {
 }
 
 void GLCommonApp::createShaderProgram() {
-
-    // GL_STREAM_DRAW GL_STATIC_DRAW GL_DYNAMIC_DRAW
-    /*
-    const char *vertexShaderSource = "#version 330 core\n"
-    "layout (location = 0) in vec3 aPos;\n"
-    "void main()\n"
-    "{\n"
-    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-    "}\0";
-    const char *fragmentShaderSource = "#version 330 core\n"
-    "layout (location = 0) out vec4 FragColor;\n"
-    "void main()\n"
-    "{\n"
-    "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-    "}\0";
-    */
     const char* vertexShaderSource = readSource(mVertexShaderPath);
     const char* fragmentShaderSource = readSource(mFragmentShaderPath);
     unsigned int vertexShader;
@@ -127,9 +111,10 @@ void GLCommonApp::bindVertexBuffer() {
         indices[i] = mIndices[i];
     }
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, mIndices.size() * sizeof(unsigned int), indices, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    // 2. use our shader program when we want to render an object
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0); 
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)( 3 * sizeof(float)));
+    glEnableVertexAttribArray(1); 
 
     delete(vertices);
     delete(indices);
@@ -153,7 +138,11 @@ void GLCommonApp::tick() {
     glClear(GL_COLOR_BUFFER_BIT);
 
     // draw
+    float timeValue = glfwGetTime();
+    float greenValue = (sin(timeValue) / 2.0f ) + 0.5f;
+    int vertexColorLocation = glGetUniformLocation(mShaderProgram, "ourColor");
     glUseProgram(mShaderProgram);
+    glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
     glBindVertexArray(mVertexArrayObject);
     // glDrawArrays(GL_TRIANGLES, 0, mVertices.size());
     glDrawElements(GL_TRIANGLES, mIndices.size(), GL_UNSIGNED_INT, 0);

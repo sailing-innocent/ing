@@ -6,16 +6,13 @@ std::string _fragPath = "D:/repos/inno/engine/shader/glsl/basic.frag";
 int main() {
     ing::GLCommonApp app(_vertPath, _fragPath);
     std::vector<float> _vertices = {
-         //  -0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f 
-        // first triangle
-        0.5f,  0.5f, 0.0f,  // top right
-        0.5f, -0.5f, 0.0f,  // bottom right
-        -0.5f, -0.5f, 0.0f,  // bottom left
-        -0.5f,  0.5f, 0.0f   // top left 
+        // positions         // colors
+        0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
+        -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
+        0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // top 
     }; 
     std::vector<unsigned int> _indices = {
-        0, 1, 3,
-        1, 2, 3
+        0, 1, 2
     };
     app.setVertices(_vertices);
     app.setIndices(_indices);
