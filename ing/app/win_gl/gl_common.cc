@@ -14,8 +14,8 @@ void GLCommonApp::init() {
     initWindow();
     // init gl
     initGL();
-    // create Shader Program
-    createShaderProgram();
+
+    mShader = *(new GLShader(mVertexShaderPath, mFragmentShaderPath));
     // bind Vertex Buffer
     bindVertexBuffer();
 }
@@ -41,49 +41,6 @@ void GLCommonApp::initGL() {
         std::cout << "Failed to initialize GLAD" << std::endl;
     }    
 }
-
-void GLCommonApp::createShaderProgram() {
-    const char* vertexShaderSource = readSource(mVertexShaderPath);
-    const char* fragmentShaderSource = readSource(mFragmentShaderPath);
-    unsigned int vertexShader;
-    vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-    glCompileShader(vertexShader);
-    int  success;
-    char infoLog[512];
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-    if(!success)
-    {
-        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-    }
-
-    unsigned int fragmentShader;
-    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-    glCompileShader(fragmentShader);
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-    if(!success)
-    {
-        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-    }
-
-    mShaderProgram = glCreateProgram();
-    glAttachShader(mShaderProgram, vertexShader);
-    glAttachShader(mShaderProgram, fragmentShader);
-    glLinkProgram(mShaderProgram);
-
-    glGetProgramiv(mShaderProgram, GL_LINK_STATUS, &success);
-    if(!success) {
-        glGetProgramInfoLog(mShaderProgram, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
-    }
-    glUseProgram(mShaderProgram);
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader); 
-}
-
 void GLCommonApp::bindVertexBuffer() {
     unsigned int VBO;
     glGenBuffers(1, &VBO);
@@ -122,12 +79,14 @@ void GLCommonApp::bindVertexBuffer() {
 
 
 void GLCommonApp::run() {
+    // std::cout << "START RUNNING" << std::endl;
     while (!glfwWindowShouldClose(mWindow)) {
         tick();
     }
 }
 
 void GLCommonApp::tick() {
+    // std::cout << "IS TICKING" << std::endl;
     // input
     // -----
     processInput(mWindow);
@@ -140,9 +99,13 @@ void GLCommonApp::tick() {
     // draw
     float timeValue = glfwGetTime();
     float greenValue = (sin(timeValue) / 2.0f ) + 0.5f;
-    int vertexColorLocation = glGetUniformLocation(mShaderProgram, "ourColor");
-    glUseProgram(mShaderProgram);
-    glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+    // int vertexColorLocation = glGetUniformLocation(mShaderProgram, "ourColor");
+    // glUseProgram(mShaderProgram);
+    mShader.use();
+    // mShader.setFloat("ourColor", greenValue)
+    mShader.setFloat4("ourColor", 0.0f, greenValue, 0.0f, 1.0f);
+
+
     glBindVertexArray(mVertexArrayObject);
     // glDrawArrays(GL_TRIANGLES, 0, mVertices.size());
     glDrawElements(GL_TRIANGLES, mIndices.size(), GL_UNSIGNED_INT, 0);

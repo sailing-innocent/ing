@@ -12,6 +12,7 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <sstream>
 #include <iostream>
 #include <ing/common.h>
 

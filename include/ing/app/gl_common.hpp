@@ -11,6 +11,7 @@
 #define ING_APP_GL_COMMON_H_
 
 #include <ing/utils/gl/gl_utils.hpp>
+#include <ing/utils/gl/gl_shader.h>
 #include <ing/app.h>
 
 ING_NAMESPACE_BEGIN
@@ -19,8 +20,8 @@ class GLCommonApp: public INGBaseApp {
 public:
     GLCommonApp() = default;
     GLCommonApp(std::string& _vertexShaderPath, std::string& _fragmentShaderPath):
-        mVertexShaderPath(_vertexShaderPath),
-        mFragmentShaderPath(_fragmentShaderPath) {}
+       mVertexShaderPath(_vertexShaderPath),
+       mFragmentShaderPath(_fragmentShaderPath) {}
     void init() override;
     void run() override;
     void terminate() override;
@@ -32,7 +33,6 @@ protected:
     virtual void initGL();
     virtual void tick();
     virtual void cleanup();
-    virtual void createShaderProgram();
     virtual void bindVertexBuffer();
 
 protected:
@@ -43,8 +43,8 @@ protected:
     std::string mFragmentShaderPath; // = "D:/repos/inno/engine/shader/glsl/basic.frag";
     std::vector<float> mVertices; // = { -0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f };
     std::vector<unsigned int> mIndices;
+    GLShader mShader;
     unsigned int mVertexBufferObject;
-    unsigned int mShaderProgram;
     unsigned int mVertexArrayObject;
     unsigned int mElementBufferObject;
 };
