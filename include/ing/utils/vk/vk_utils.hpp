@@ -9,17 +9,16 @@
 #ifndef ING_UTILS_VULKAN_H_
 #define ING_UTILS_VULKAN_H_
 
-#include <iostream>
+
 #include <stdexcept>
 #include <cstdlib>
-#include <vector>
+
 #include <optional>
 #include <set>
 #include <cstdint> // Necessary for uint32_t
 #include <limits> // Necessary for std::numeric_limits
 #include <algorithm> // Necessary for std::clamp
-#include <string>
-#include <fstream>
+
 #include <array>
 
 #define VK_USE_PLATFORM_WIN32_KHR
@@ -34,6 +33,8 @@
 
 #include <ing/common.h>
 #include <ing/geometry.h>
+
+#include <ing/utils/common_utils.hpp>
 
 ING_NAMESPACE_BEGIN
 
@@ -74,7 +75,7 @@ struct VkOutVertex {
 VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger);
 void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator);
 void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
-std::vector<char> readFile(const std::string& filename);
+
 
 ING_NAMESPACE_END
 

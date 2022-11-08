@@ -18,4 +18,14 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     glViewport(0, 0, width, height);
 }
 
+const char* readSource(std::string& sourcePath) {
+    std::vector<char> sourceBuffer = readFile(sourcePath);
+    char* source = new char[sourceBuffer.size()];
+    for (auto i = 0; i < sourceBuffer.size(); i++) {
+        source[i] = sourceBuffer[i];
+    }
+    // std::cout << "SOURCE:\n" << source << std::endl;
+    return source;
+}
+
 ING_NAMESPACE_END

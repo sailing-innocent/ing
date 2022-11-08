@@ -36,8 +36,8 @@ protected:
     GLFWwindow* mWindow = NULL;
     unsigned int mWidth = 800;
     unsigned int mHeight = 600;
-    std::string mVertexShaderPath = "";
-    std::string mFragmentShaderPath = "";
+    std::string mVertexShaderPath = "D:/repos/inno/engine/shader/glsl/basic.vert";
+    std::string mFragmentShaderPath = "D:/repos/inno/engine/shader/glsl/basic.frag";
     float mVertices[9] = { -0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f };
     unsigned int mVertexBufferObject;
     unsigned int mShaderProgram;

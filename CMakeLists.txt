@@ -34,6 +34,11 @@ list(APPEND ING_INCLUDE_DIR
     "E:/includes"
 )
 
+list(APPEND ING_SOURCE
+    "ing/core/timer.cc"
+    "ing/utils/common_utils.cc"
+)
+
 if (${VK_LIB})
     list(APPEND ING_INCLUDE_DIR
         "E:/sdk/Vulkan/Include"
@@ -52,7 +57,6 @@ if (${VK_LIB})
         "ing/app/win_vulkan/vk_hello.cc"
         "ing/app/win_vulkan/vk_canvas.cc"
         "ing/app/win_vulkan/vk_scene.cc"
-        "ing/core/timer.cc"
     )
     # add_executable(ing ${ING_SOURCE})
     add_library(libing ${ING_SOURCE})

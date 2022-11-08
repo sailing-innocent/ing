@@ -45,6 +45,7 @@ void GLCommonApp::initGL() {
 void GLCommonApp::createShaderProgram() {
 
     // GL_STREAM_DRAW GL_STATIC_DRAW GL_DYNAMIC_DRAW
+    /*
     const char *vertexShaderSource = "#version 330 core\n"
     "layout (location = 0) in vec3 aPos;\n"
     "void main()\n"
@@ -57,6 +58,9 @@ void GLCommonApp::createShaderProgram() {
     "{\n"
     "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
     "}\0";
+    */
+    const char* vertexShaderSource = readSource(mVertexShaderPath);
+    const char* fragmentShaderSource = readSource(mFragmentShaderPath);
     unsigned int vertexShader;
     vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
