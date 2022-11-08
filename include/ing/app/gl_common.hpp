@@ -29,7 +29,8 @@ protected:
     virtual void initGL();
     virtual void tick();
     virtual void cleanup();
-    virtual void compileShader();
+    virtual void createShaderProgram();
+    virtual void bindVertexBuffer();
 
 protected:
     GLFWwindow* mWindow = NULL;
@@ -37,10 +38,10 @@ protected:
     unsigned int mHeight = 600;
     std::string mVertexShaderPath = "";
     std::string mFragmentShaderPath = "";
-    std::vector<float> mVertices[] = { -0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f };
+    float mVertices[9] = { -0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f };
     unsigned int mVertexBufferObject;
-    unsigned int mVertexShaderHandle;
-    
+    unsigned int mShaderProgram;
+    unsigned int mVertexArrayObject;
 };
 
 ING_NAMESPACE_END
