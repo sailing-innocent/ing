@@ -103,16 +103,36 @@ void GLCommonApp::createShaderProgram() {
 void GLCommonApp::bindVertexBuffer() {
     unsigned int VBO;
     glGenBuffers(1, &VBO);
-    unsigned int mVertexArrayObject;
+    glGenBuffers(1, &mElementBufferObject);
     glGenVertexArrays(1, &mVertexArrayObject);
+
     glBindVertexArray(mVertexArrayObject);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(mVertices), mVertices, GL_STATIC_DRAW);
-    // 1. then set the vertex attributes pointers
+
+    float* vertices = new float[mVertices.size()];
+    for (auto i = 0; i < mVertices.size(); i++) {
+        vertices[i] = mVertices[i];
+    }
+    glBufferData(GL_ARRAY_BUFFER, mVertices.size() * sizeof(float) , vertices, GL_STATIC_DRAW);
+    // first param: which vertex attribute we want to configure
+    // size of vertex attribute
+    // type of data
+    // normalized or not
+    // stride
+    // offset
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mElementBufferObject);
+    unsigned int* indices = new unsigned int[mIndices.size()];
+    for (auto i = 0; i < mIndices.size(); i++) {
+        indices[i] = mIndices[i];
+    }
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, mIndices.size() * sizeof(unsigned int), indices, GL_STATIC_DRAW);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);  
     // 2. use our shader program when we want to render an object
-    glUseProgram(mShaderProgram);
+    glEnableVertexAttribArray(0); 
+
+    delete(vertices);
+    delete(indices);
 }
 
 
@@ -135,7 +155,12 @@ void GLCommonApp::tick() {
     // draw
     glUseProgram(mShaderProgram);
     glBindVertexArray(mVertexArrayObject);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    // glDrawArrays(GL_TRIANGLES, 0, mVertices.size());
+    glDrawElements(GL_TRIANGLES, mIndices.size(), GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+    // GL PRIMITIVE
+    // starting index
+    // amount of vertices
 
     // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
     // -------------------------------------------------------------------------------
@@ -152,6 +177,20 @@ void GLCommonApp::terminate() {
 
 void GLCommonApp::cleanup() {
 
+}
+
+void GLCommonApp::setVertices(std::vector<float>& _vertices) {
+    mVertices.resize(_vertices.size());
+    for (auto i = 0; i < _vertices.size(); i++) {
+        mVertices[i] = _vertices[i];
+    }
+}
+
+void GLCommonApp::setIndices(std::vector<unsigned int>& _indices) {
+    mIndices.resize(_indices.size());
+    for (auto i = 0; i < _indices.size(); i++) {
+        mIndices[i] = _indices[i];
+    }
 }
 
 ING_NAMESPACE_END

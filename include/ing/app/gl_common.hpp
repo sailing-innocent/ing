@@ -24,6 +24,9 @@ public:
     void init() override;
     void run() override;
     void terminate() override;
+public:
+    virtual void setVertices(std::vector<float>& _vertices);
+    virtual void setIndices(std::vector<unsigned int>& _indices);
 protected:
     virtual void initWindow();
     virtual void initGL();
@@ -36,12 +39,14 @@ protected:
     GLFWwindow* mWindow = NULL;
     unsigned int mWidth = 800;
     unsigned int mHeight = 600;
-    std::string mVertexShaderPath = "D:/repos/inno/engine/shader/glsl/basic.vert";
-    std::string mFragmentShaderPath = "D:/repos/inno/engine/shader/glsl/basic.frag";
-    float mVertices[9] = { -0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f };
+    std::string mVertexShaderPath; // = "D:/repos/inno/engine/shader/glsl/basic.vert";
+    std::string mFragmentShaderPath; // = "D:/repos/inno/engine/shader/glsl/basic.frag";
+    std::vector<float> mVertices; // = { -0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f };
+    std::vector<unsigned int> mIndices;
     unsigned int mVertexBufferObject;
     unsigned int mShaderProgram;
     unsigned int mVertexArrayObject;
+    unsigned int mElementBufferObject;
 };
 
 ING_NAMESPACE_END
