@@ -14,7 +14,7 @@ void GLCommonApp::init() {
     initWindow();
     // init gl
     initGL();
-
+    // build shader
     mShader = *(new GLShader(mVertexShaderPath, mFragmentShaderPath));
     // bind Vertex Buffer
     bindVertexBuffer();
@@ -77,15 +77,11 @@ void GLCommonApp::bindVertexBuffer() {
     delete(indices);
 }
 
-
-void GLCommonApp::run() {
-    // std::cout << "START RUNNING" << std::endl;
-    while (!glfwWindowShouldClose(mWindow)) {
-        tick();
-    }
+bool GLCommonApp::shouldClose() {
+    return glfwWindowShouldClose(mWindow);
 }
 
-void GLCommonApp::tick() {
+bool GLCommonApp::tick(int count) {
     // std::cout << "IS TICKING" << std::endl;
     // input
     // -----
@@ -118,6 +114,8 @@ void GLCommonApp::tick() {
     // -------------------------------------------------------------------------------
     glfwSwapBuffers(mWindow);
     glfwPollEvents(); 
+
+    return true;
 }
 
 void GLCommonApp::terminate() {

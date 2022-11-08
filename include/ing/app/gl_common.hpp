@@ -16,22 +16,22 @@
 
 ING_NAMESPACE_BEGIN
 
-class GLCommonApp: public INGBaseApp {
+class GLCommonApp: public INGApp {
 public:
     GLCommonApp() = default;
     GLCommonApp(std::string& _vertexShaderPath, std::string& _fragmentShaderPath):
        mVertexShaderPath(_vertexShaderPath),
        mFragmentShaderPath(_fragmentShaderPath) {}
     void init() override;
-    void run() override;
+    bool tick(int count) override;
     void terminate() override;
+    bool shouldClose();
 public:
     virtual void setVertices(std::vector<float>& _vertices);
     virtual void setIndices(std::vector<unsigned int>& _indices);
 protected:
     virtual void initWindow();
     virtual void initGL();
-    virtual void tick();
     virtual void cleanup();
     virtual void bindVertexBuffer();
 

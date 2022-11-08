@@ -17,7 +17,11 @@ int main() {
     app.setVertices(_vertices);
     app.setIndices(_indices);
     app.init();
-    app.run();
+    int i = 0;
+    while (!app.shouldClose()) {
+        app.tick(i);
+        i++;
+    }
     app.terminate();
     return 0;
 }
