@@ -1,5 +1,10 @@
 #include <ing/app/gl_common.hpp>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+
 ING_NAMESPACE_BEGIN
 
 void GLCommonApp::init() {
@@ -95,12 +100,21 @@ bool GLCommonApp::tick(int count) {
     // draw
     float timeValue = glfwGetTime();
     float greenValue = (sin(timeValue) / 2.0f ) + 0.5f;
+    // transform
+    // glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
+    // glm::mat4 trans = glm::mat4(1.0f);
+    // trans = glm::translate(trans, glm::vec3(1.0f, 1.0f, 0.0f));
+    // vec = trans * vec;
     // int vertexColorLocation = glGetUniformLocation(mShaderProgram, "ourColor");
     // glUseProgram(mShaderProgram);
+    // glm::mat4 trans = glm::mat4(1.0f);
+    // trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
+    // trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));  
     mShader.use();
     // mShader.setFloat("ourColor", greenValue)
     mShader.setFloat4("ourColor", 0.0f, greenValue, 0.0f, 1.0f);
-
+    // unsigned int transformLoc = glGetUniformLocation(mShader.ID, "transform");
+    // glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
 
     glBindVertexArray(mVertexArrayObject);
     // glDrawArrays(GL_TRIANGLES, 0, mVertices.size());
