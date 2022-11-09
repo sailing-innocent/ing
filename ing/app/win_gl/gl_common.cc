@@ -21,6 +21,7 @@ void GLCommonApp::init() {
     initGL();
     // build shader
     mShader = *(new GLShader(mVertexShaderPath, mFragmentShaderPath));
+    mStartTime = glfwGetTime();
     // mShader2 = *(new GLShader("D:/repos/inno/engine/shader/glsl/plain.vert", "D:/repos/inno/engine/shader/glsl/plain.frag"));    
     // bind Vertex Buffer
     bindVertexBuffer();
@@ -103,7 +104,7 @@ bool GLCommonApp::tick(int count) {
     glClear(GL_COLOR_BUFFER_BIT);
 
     // draw
-    float timeValue = glfwGetTime();
+    float timeValue = glfwGetTime() - mStartTime;
     float greenValue = (sin(timeValue) / 2.0f ) + 0.5f;
     // transform
     // glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);

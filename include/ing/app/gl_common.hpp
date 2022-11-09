@@ -48,7 +48,7 @@ protected:
     unsigned int mVertexBufferObject;
     unsigned int mVertexArrayObject;
     unsigned int mElementBufferObject;
-
+    float mStartTime = 0.0f;
     size_t mLineOffsetStart = 3;
     size_t mLineOffsetEnd = 4;
     size_t mTriangleOffsetStart = 0;
