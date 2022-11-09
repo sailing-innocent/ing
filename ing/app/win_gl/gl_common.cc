@@ -21,7 +21,7 @@ void GLCommonApp::init() {
     initGL();
     // build shader
     mShader = *(new GLShader(mVertexShaderPath, mFragmentShaderPath));
-    mShader2 = *(new GLShader("D:/repos/inno/engine/shader/glsl/plain.vert", "D:/repos/inno/engine/shader/glsl/plain.frag"));    
+    // mShader2 = *(new GLShader("D:/repos/inno/engine/shader/glsl/plain.vert", "D:/repos/inno/engine/shader/glsl/plain.frag"));    
     // bind Vertex Buffer
     bindVertexBuffer();
 
@@ -118,14 +118,15 @@ bool GLCommonApp::tick(int count) {
     mShader.use();
     // mShader.setFloat("ourColor", greenValue)
     mShader.setFloat4("ourColor", 0.0f, greenValue, 0.0f, 1.0f);
+    mShader.setFloat("t", timeValue);
     // unsigned int transformLoc = glGetUniformLocation(mShader.ID, "transform");
     // glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
-
     glBindVertexArray(mVertexArrayObject);
     // glDrawArrays(GL_TRIANGLES, 0, mVertices.size());
-    glDrawElements(GL_TRIANGLES, mTriangleOffsetEnd - mTriangleOffsetStart + 1, GL_UNSIGNED_INT, (void*)(mTriangleOffsetStart * sizeof(unsigned int)));
-    mShader2.use();
-    glDrawElements(GL_LINES,  mLineOffsetEnd - mLineOffsetStart + 1, GL_UNSIGNED_INT, (void*)(mLineOffsetStart * sizeof(unsigned int)));
+    // glDrawElements(GL_TRIANGLES, mTriangleOffsetEnd - mTriangleOffsetStart + 1, GL_UNSIGNED_INT, (void*)(mTriangleOffsetStart * sizeof(unsigned int)));
+    // mShader2.use();
+    // glDrawElements(GL_LINES,  mLineOffsetEnd - mLineOffsetStart + 1, GL_UNSIGNED_INT, (void*)(mLineOffsetStart * sizeof(unsigned int)));
+    glDrawElements(GL_LINES,  mIndices.size() , GL_UNSIGNED_INT, (void*)(0));
     glBindVertexArray(0);
     // GL PRIMITIVE
     // starting index

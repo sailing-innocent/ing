@@ -89,10 +89,12 @@ elseif(${PURE_GL})
     )
     list(APPEND ING_SOURCE
         "E:/source/glad/glad.c"
-        "examples/static/gl_app.cc"
+        # "examples/static/gl_app.cc"
         "ing/app/win_gl/gl_common.cc"
         "ing/utils/gl_utils.cc"
         "ing/utils/gl_shader.cc"
+
+        "examples/dynamic/wave.cc"
     )
     add_executable(ing ${ING_SOURCE})
     target_link_directories(ing PUBLIC ${ING_LIBS_DIR})
