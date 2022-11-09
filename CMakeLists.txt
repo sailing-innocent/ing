@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 
 project(ing VERSION 0.1)
 
-set(VK_LIB FALSE)
+set(VK_LIB TRUE)
 set(TEST FALSE)
 set(VK_TEST FALSE)
 set(PURE_GL TRUE)

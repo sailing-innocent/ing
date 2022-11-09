@@ -2,8 +2,7 @@
 
 ING_NAMESPACE_BEGIN
 
-GLShader::GLShader(std::string& vertexPath, std::string& fragmentPath)
-{
+GLShader::GLShader(const char* vertexPath, const char* fragmentPath) {
     // std::cout << "is constructing GL shader" << std::endl;
     std::string vertexCode;
     std::string fragmentCode;
@@ -17,8 +16,8 @@ GLShader::GLShader(std::string& vertexPath, std::string& fragmentPath)
     try 
     {
         // open files
-        vShaderFile.open(vertexPath.c_str());
-        fShaderFile.open(fragmentPath.c_str());
+        vShaderFile.open(vertexPath);
+        fShaderFile.open(fragmentPath);
         std::stringstream vShaderStream, fShaderStream;
         // read file's buffer contents into streams
         vShaderStream << vShaderFile.rdbuf();
@@ -83,6 +82,10 @@ GLShader::GLShader(std::string& vertexPath, std::string& fragmentPath)
     glDeleteShader(vertex);
     glDeleteShader(fragment);
 }
+
+GLShader::GLShader(std::string& vertexPath, std::string& fragmentPath):
+    GLShader(vertexPath.c_str(), fragmentPath.c_str())
+{}
 
 void GLShader::use() {
     glUseProgram(ID);

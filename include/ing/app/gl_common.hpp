@@ -44,9 +44,15 @@ protected:
     std::vector<float> mVertices; // = { -0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f };
     std::vector<unsigned int> mIndices;
     GLShader mShader;
+    GLShader mShader2;
     unsigned int mVertexBufferObject;
     unsigned int mVertexArrayObject;
     unsigned int mElementBufferObject;
+
+    size_t mLineOffsetStart = 3;
+    size_t mLineOffsetEnd = 4;
+    size_t mTriangleOffsetStart = 0;
+    size_t mTriangleOffsetEnd = 2;
 };
 
 ING_NAMESPACE_END

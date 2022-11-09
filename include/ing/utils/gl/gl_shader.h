@@ -12,6 +12,7 @@ public:
     unsigned int ID; // the program id
     GLShader() = default;
     GLShader(std::string& vertexPath, std::string& fragmentPath);
+    GLShader(const char* vertexPath, const char* fragmentPath);
     void use(); // use/activate the shader
     GLShader& operator=(const GLShader& rhs) { ID = rhs.ID; return *this; }
     // utility uniform functions

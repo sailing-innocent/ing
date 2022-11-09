@@ -21,8 +21,10 @@ void GLCommonApp::init() {
     initGL();
     // build shader
     mShader = *(new GLShader(mVertexShaderPath, mFragmentShaderPath));
+    mShader2 = *(new GLShader("D:/repos/inno/engine/shader/glsl/plain.vert", "D:/repos/inno/engine/shader/glsl/plain.frag"));    
     // bind Vertex Buffer
     bindVertexBuffer();
+
 }
 
 void GLCommonApp::initWindow() {
@@ -73,6 +75,9 @@ void GLCommonApp::bindVertexBuffer() {
         indices[i] = mIndices[i];
     }
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, mIndices.size() * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+    
+    
+    
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0); 
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)( 3 * sizeof(float)));
@@ -118,7 +123,9 @@ bool GLCommonApp::tick(int count) {
 
     glBindVertexArray(mVertexArrayObject);
     // glDrawArrays(GL_TRIANGLES, 0, mVertices.size());
-    glDrawElements(GL_TRIANGLES, mIndices.size(), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, mTriangleOffsetEnd - mTriangleOffsetStart + 1, GL_UNSIGNED_INT, (void*)(mTriangleOffsetStart * sizeof(unsigned int)));
+    mShader2.use();
+    glDrawElements(GL_LINES,  mLineOffsetEnd - mLineOffsetStart + 1, GL_UNSIGNED_INT, (void*)(mLineOffsetStart * sizeof(unsigned int)));
     glBindVertexArray(0);
     // GL PRIMITIVE
     // starting index
