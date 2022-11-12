@@ -1,3 +1,4 @@
+#include <glad/glad.h>
 #include <ing/app/gl_common.hpp>
 
 #include <glm/glm.hpp>
@@ -25,7 +26,6 @@ void GLCommonApp::init() {
     // mShader2 = *(new GLShader("D:/repos/inno/engine/shader/glsl/plain.vert", "D:/repos/inno/engine/shader/glsl/plain.frag"));    
     // bind Vertex Buffer
     bindVertexBuffer();
-
 }
 
 void GLCommonApp::initWindow() {

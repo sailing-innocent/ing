@@ -2,10 +2,9 @@ cmake_minimum_required(VERSION 3.10)
 
 project(ing VERSION 0.1)
 
-set(VK_LIB TRUE)
 set(TEST FALSE)
-set(VK_TEST FALSE)
-set(PURE_GL TRUE)
+set(VK_TEST TRUE)
+set(PURE_GL FALSE)
 set(IMGUI_DRX FALSE)
 set(BUILD_BASIC FALSE)
 set(BUILD_CV FALSE)
@@ -39,31 +38,42 @@ list(APPEND ING_SOURCE
     "ing/utils/common_utils.cc"
 )
 
-if (${VK_LIB})
-    list(APPEND ING_INCLUDE_DIR
-        "E:/sdk/Vulkan/Include"
-    )
-    list(APPEND ING_LIBS_DIR
-        "E:/libs/glfw"
-        "E:/sdk/Vulkan/Lib"
-    )
-    list(APPEND ING_LIBS
-        "glfw3"
-        "vulkan-1"
-    )
-    list(APPEND ING_SOURCE
-        "ing/utils/vk_utils.cc"
-        "ing/app/win_vulkan/vk_common.cc"
-        "ing/app/win_vulkan/vk_hello.cc"
-        "ing/app/win_vulkan/vk_canvas.cc"
-        "ing/app/win_vulkan/vk_scene.cc"
-    )
-    # add_executable(ing ${ING_SOURCE})
-    add_library(libing ${ING_SOURCE})
-    target_link_directories(libing PUBLIC ${ING_LIBS_DIR})
-    target_link_libraries(libing PUBLIC ${ING_LIBS})
-    target_include_directories(libing PUBLIC ${ING_INCLUDE_DIR})
-endif()
+list(APPEND ING_LIBS_DIR
+    "E:/libs/glfw"
+)
+list(APPEND ING_LIBS
+    "glfw3"
+)
+list(APPEND ING_SOURCE
+    "E:/source/glad/glad.c"
+    # "examples/static/gl_app.cc"
+    "ing/app/win_gl/gl_common.cc"
+    "ing/utils/gl_utils.cc"
+    "ing/utils/gl_shader.cc"
+)
+list(APPEND ING_INCLUDE_DIR
+    "E:/sdk/Vulkan/Include"
+)
+list(APPEND ING_LIBS_DIR
+    "E:/libs/glfw"
+    "E:/sdk/Vulkan/Lib"
+)
+list(APPEND ING_LIBS
+    "glfw3"
+    "vulkan-1"
+)
+list(APPEND ING_SOURCE
+    "ing/utils/vk_utils.cc"
+    "ing/app/win_vulkan/vk_common.cc"
+    "ing/app/win_vulkan/vk_hello.cc"
+    "ing/app/win_vulkan/vk_canvas.cc"
+    "ing/app/win_vulkan/vk_scene.cc"
+)
+add_library(libing ${ING_SOURCE})
+target_link_directories(libing PUBLIC ${ING_LIBS_DIR})
+target_link_libraries(libing PUBLIC ${ING_LIBS})
+target_include_directories(libing PUBLIC ${ING_INCLUDE_DIR})
+
 
 if(${TEST})
     list(APPEND ING_SOURCE
@@ -76,30 +86,24 @@ elseif(${VK_TEST})
         ${ING_LIBS}
         $<TARGET_OBJECTS:libing>
     )
-    add_executable(ing "examples/static/vk_scene_main.cc")
+    add_executable(ing "examples/static/vk_hello_main.cc")
     target_link_directories(ing PUBLIC ${ING_LIBS_DIR})
     target_include_directories(ing PUBLIC ${ING_INCLUDE_DIR})
     target_link_libraries(ing ${ING_EXAMPLE_LIBS})
 elseif(${PURE_GL})
-    list(APPEND ING_LIBS_DIR
-        "E:/libs/glfw"
-    )
-    list(APPEND ING_LIBS
-        "glfw3"
-    )
-    list(APPEND ING_SOURCE
-        "E:/source/glad/glad.c"
-        # "examples/static/gl_app.cc"
-        "ing/app/win_gl/gl_common.cc"
-        "ing/utils/gl_utils.cc"
-        "ing/utils/gl_shader.cc"
+    target_link_directories(libing PUBLIC ${ING_LIBS_DIR})
+    target_link_libraries(libing PUBLIC ${ING_LIBS})
+    target_include_directories(libing PUBLIC ${ING_INCLUDE_DIR})
 
-        "examples/dynamic/wave.cc"
+    list(APPEND ING_EXAMPLE_LIBS
+        ${ING_LIBS}
+        $<TARGET_OBJECTS:libing>
     )
-    add_executable(ing ${ING_SOURCE})
+    add_executable(ing "examples/dynamic/wave.cc")
     target_link_directories(ing PUBLIC ${ING_LIBS_DIR})
-    target_link_libraries(ing PUBLIC ${ING_LIBS})
+    target_link_libraries(ing PUBLIC ${ING_EXAMPLE_LIBS})
     target_include_directories(ing PUBLIC ${ING_INCLUDE_DIR})
+
 elseif(${IMGUI_DRX})
     set(IMGUI_DIR "E:/source/imgui")
     list(APPEND IMGUI_SOURCE

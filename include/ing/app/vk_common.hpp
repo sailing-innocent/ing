@@ -29,41 +29,40 @@ struct SwapChainSupportDetails {
     std::vector<VkPresentModeKHR> presentModes;
 };
 
+
+
 class VkCommonApp {
 public:
-    void init();
-    void run();
-    void terminate();
+    virtual void init(GLFWwindow* _m_window = NULL);
+    virtual void run();
+    virtual void terminate();
+    virtual bool tick(float delta_time);
 protected:
     // procedure
-    void initWindow();
-    void initVulkan();
-    void mainLoop();
-    void cleanup();
+    virtual void initWindow();
+    virtual void initVulkan();
+    virtual void mainLoop();
+    virtual void cleanup();
+    virtual void createInstance();
+    virtual void pickPhysicalDevice();
+    virtual void createLogicalDevice();
+    virtual void createSurface();
+    virtual void createSwapChain();
+    virtual void createImageViews();
+    virtual void createRenderPass();
+    virtual void createGraphicsPipeline();
+    virtual void createFramebuffers();
+    virtual void createCommandPool();
+    virtual void createVertexBuffer();
+    virtual void createCommandBuffer();
+    virtual void createSyncObjects();
+    virtual void drawFrame();
+    virtual void setupDebugMessenger();
 
-
-    void createInstance();
-    void pickPhysicalDevice();
-    void createLogicalDevice();
-    void createSurface();
-    void createSwapChain();
-    void createImageViews();
-    void createRenderPass();
-    void createGraphicsPipeline();
-    void createFramebuffers();
-    void createCommandPool();
-    void createVertexBuffer();
-    void createCommandBuffer();
-    void createSyncObjects();
-
-    void drawFrame();
- 
-    void setupDebugMessenger();
-    void createVertexInputInfo();
 protected:
 // utils methods
-    bool checkValidationLayerSupport();
-    std::vector<const char*> getRequiredExtensions();
+    virtual bool checkValidationLayerSupport();
+    virtual std::vector<const char*> getRequiredExtensions();
     static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
         VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
         VkDebugUtilsMessageTypeFlagsEXT messageType,
@@ -74,18 +73,18 @@ protected:
             }
             return VK_FALSE;
         }
-    QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
-    bool isDeviceSuitable(VkPhysicalDevice device);
-    bool checkDeviceExtensionSupport(VkPhysicalDevice device);
-    SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device);
-    VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
-    VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
-    VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
-    VkShaderModule createShaderModule(const std::vector<char>& code);
-    void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
-    void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
-    uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
-    void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size0);
+    virtual QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
+    virtual bool isDeviceSuitable(VkPhysicalDevice device);
+    virtual bool checkDeviceExtensionSupport(VkPhysicalDevice device);
+    virtual SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device);
+    virtual VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
+    virtual VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
+    virtual VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
+    virtual VkShaderModule createShaderModule(const std::vector<char>& code);
+    virtual void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
+    virtual void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
+    virtual uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+    virtual void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size0);
 
 protected:
     GLFWwindow* mWindow = NULL;

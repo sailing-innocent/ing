@@ -14,9 +14,7 @@ ING_NAMESPACE_BEGIN
 
 class HelloTriangleApplication: public VkCommonApp {
 public:
-    void init();
-    void run();
-    void terminate();
+    void wait();
 protected:
     void initVulkan();
     void cleanup();

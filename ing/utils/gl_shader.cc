@@ -1,3 +1,4 @@
+#include <glad/glad.h>
 #include <ing/utils/gl/gl_shader.h>
 
 ING_NAMESPACE_BEGIN

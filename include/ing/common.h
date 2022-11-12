@@ -32,8 +32,6 @@ public:
     virtual ~INGNode() {};
 };
 
-
-
 ING_NAMESPACE_END
 
 #endif // ING_COMMON_H_

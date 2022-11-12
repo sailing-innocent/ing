@@ -2,8 +2,14 @@
 
 ING_NAMESPACE_BEGIN
 
-void VkCommonApp::init() {
-    initWindow();
+void VkCommonApp::init(GLFWwindow* _m_window) {
+    if (!_m_window) {
+        initWindow(); 
+    }
+    else {
+        mWindow = _m_window;
+    }
+    
     initVulkan();
 }
 
@@ -20,17 +26,22 @@ void VkCommonApp::initWindow()
     glfwInit();
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
     mWindow = glfwCreateWindow(mWidth, mHeight, "VK_HELLO", nullptr, nullptr);
-
 }
 
 void VkCommonApp::mainLoop()
 {
     while (!glfwWindowShouldClose(mWindow))
     {
-        glfwPollEvents();
-        drawFrame();
+        tick(0.0);
     }
     vkDeviceWaitIdle(mDevice);
+}
+
+bool VkCommonApp::tick(float delta_time)
+{
+    glfwPollEvents();
+    drawFrame();
+    return true;
 }
 
 void VkCommonApp::cleanup()

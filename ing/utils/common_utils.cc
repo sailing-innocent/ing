@@ -9,19 +9,12 @@ std::vector<char> readFile(const std::string& filename) {
         throw std::runtime_error("failed to open file: " + filename);
     }
     size_t fileSize = (size_t) file.tellg();
-    std::vector<char> buffer(fileSize + 1);
+    std::vector<char> buffer(fileSize);
 
     file.seekg(0);
     file.read(buffer.data(), fileSize);
 
     file.close();
-    /*
-    for ( auto item: buffer) {
-        std::cout << item;
-    }
-    std::cout << std::endl;
-    */
-    buffer[fileSize] = '\0';
     return buffer;
 }
 

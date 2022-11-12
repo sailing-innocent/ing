@@ -2,7 +2,6 @@
 #ifndef ING_UTILS_GL_UTILS_HPP_
 #define ING_UTILS_GL_UTILS_HPP_
 
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <ing/common.h>
 #include <ing/utils/common_utils.hpp>

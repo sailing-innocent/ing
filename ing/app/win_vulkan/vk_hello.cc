@@ -2,19 +2,6 @@
 
 ING_NAMESPACE_BEGIN
 
-void HelloTriangleApplication::init() {
-    VkCommonApp::initWindow();
-    initVulkan();
-}
-
-void HelloTriangleApplication::terminate() {
-    cleanup();
-}
-
-void HelloTriangleApplication::run() {
-    mainLoop();
-}
-
 void HelloTriangleApplication::mainLoop()
 {
     while (!glfwWindowShouldClose(mWindow))
@@ -22,6 +9,10 @@ void HelloTriangleApplication::mainLoop()
         glfwPollEvents();
         drawFrame();
     }
+    wait();
+}
+
+void HelloTriangleApplication::wait() {
     vkDeviceWaitIdle(mDevice);
 }
 
