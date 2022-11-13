@@ -34,6 +34,10 @@ void VkCommonApp::mainLoop()
     {
         tick(0.0);
     }
+    wait();
+}
+
+void VkCommonApp::wait() {
     vkDeviceWaitIdle(mDevice);
 }
 
@@ -83,14 +87,25 @@ void VkCommonApp::initVulkan()
     createImageViews();
     createRenderPass();
 
+    createDescriptorSetLayout();
     createGraphicsPipeline();
 
     createFramebuffers();
     createCommandPool();
+
+    createTextureImage();
+
     createVertexBuffer();
+    createIndexBuffer();
+    createUniformBuffers();
+    createDescriptorPool();
+    createDescriptorSets();
+
     createCommandBuffer();
     createSyncObjects();
 }
+
+void VkCommonApp::createTextureImage() {}
 
 void VkCommonApp::createInstance()
 {
@@ -529,6 +544,7 @@ void VkCommonApp::createRenderPass()
     colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
     colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
     colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    // colorAttachment.initialLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
     colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR; // VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL // VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL
 
     VkAttachmentReference colorAttachmentRef{};
@@ -560,6 +576,10 @@ void VkCommonApp::createRenderPass()
         throw std::runtime_error("failed to create render pass!");
     }
 }
+
+void VkCommonApp::createDescriptorSetLayout() {}
+void VkCommonApp::createDescriptorPool() {}
+void VkCommonApp::createDescriptorSets() {}
 
 void VkCommonApp::createGraphicsPipeline()
 {
@@ -777,6 +797,8 @@ void VkCommonApp::createCommandBuffer()
 }
 
 void VkCommonApp::createVertexBuffer() {}
+void VkCommonApp::createIndexBuffer() {}
+void VkCommonApp::createUniformBuffers() {}
 
 void VkCommonApp::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex)
 {

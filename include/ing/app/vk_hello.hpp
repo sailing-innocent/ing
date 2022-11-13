@@ -13,15 +13,10 @@
 ING_NAMESPACE_BEGIN
 
 class HelloTriangleApplication: public VkCommonApp {
-public:
-    void wait();
 protected:
-    void initVulkan();
     void cleanup();
-    void mainLoop();
     void createGraphicsPipeline();
     void createVertexBuffer();
-    void drawFrame();
 
 protected:
     void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);

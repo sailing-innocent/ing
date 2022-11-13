@@ -2,20 +2,6 @@
 
 ING_NAMESPACE_BEGIN
 
-void SceneApp::init()
-{
-    VkCommonApp::initWindow();
-    initVulkan();
-}
-
-void SceneApp::terminate() {
-    cleanup();
-}
-
-void SceneApp::run() {
-    mainLoop();
-}
-
 void SceneApp::createDescriptorPool()
 {
     VkDescriptorPoolSize poolSize{};
@@ -66,41 +52,14 @@ void SceneApp::createDescriptorSets()
         descriptorWrite.pTexelBufferView = nullptr; // Optional
         vkUpdateDescriptorSets(mDevice, 1, &descriptorWrite, 0, nullptr);
     }
-
-}
-
-void SceneApp::initVulkan()
-{
-    VkCommonApp::createInstance();
-    VkCommonApp::setupDebugMessenger();
-    VkCommonApp::createSurface();
-    VkCommonApp::pickPhysicalDevice();
-    VkCommonApp::createLogicalDevice();
-    VkCommonApp::createSwapChain();
-    VkCommonApp::createImageViews();
-    VkCommonApp::createRenderPass();
-
-    createDescriptorSetLayout();
-    createGraphicsPipeline();
-
-    VkCommonApp::createFramebuffers();
-    VkCommonApp::createCommandPool();
-
-    createVertexBuffer();
-    createIndexBuffer();
-    createUniformBuffers();
-
-    createDescriptorPool();
-    createDescriptorSets();
-
-    VkCommonApp::createCommandBuffer();
-    VkCommonApp::createSyncObjects();
 }
 
 void SceneApp::createUniformBuffers() {
     VkDeviceSize bufferSize = sizeof(UniformBufferObject);
+    
     mUniformBuffers.resize(MAX_FRAMES_IN_FLIGHT);
     mUniformBuffersMemory.resize(MAX_FRAMES_IN_FLIGHT);
+    mUniformBuffersMapped.resize(MAX_FRAMES_IN_FLIGHT);
 
     for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
         createBuffer(bufferSize,
@@ -109,15 +68,19 @@ void SceneApp::createUniformBuffers() {
             VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
             mUniformBuffers[i],
             mUniformBuffersMemory[i]);
+        vkMapMemory(mDevice, mUniformBuffersMemory[i], 0, bufferSize, 0, &mUniformBuffersMapped[i]);
+        // get the pointer we can write data later on
+        // the buffer stays mapped to this pointer for app's whole lifetime
+        // persistent mapping
     }
 }
 
 void SceneApp::createDescriptorSetLayout() 
 {
     VkDescriptorSetLayoutBinding uboLayoutBinding{};
-    uboLayoutBinding.binding = 0;
+    uboLayoutBinding.binding = 0; // specify the binding used in shader
     uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-    uboLayoutBinding.descriptorCount = 1;
+    uboLayoutBinding.descriptorCount = 1; // number of values in the array
 
     uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
     uboLayoutBinding.pImmutableSamplers = nullptr; // image sampling
@@ -136,23 +99,10 @@ void SceneApp::mainLoop()
 {
     const float SPF = 1/mFPS;
     float t = 0.0;
-    int step = 0;
     while (!glfwWindowShouldClose(mWindow))
     {
         glfwPollEvents();
-        mTimer.Tick();
-        t += mTimer.DeltaTime();
-
-        if ( t > SPF) {
-            if (!mAppPaused) {
-                calculateFrameStats();
-                step++;
-                updateUniformBuffer(mCurrentFrame, mTimer, step);
-            }
-            t = 0.0;
-        } else {
-            drawFrame(mTimer);
-        }
+        drawFrame(mTimer);
     }
     vkDeviceWaitIdle(mDevice);
 }
@@ -177,41 +127,47 @@ void SceneApp::calculateFrameStats()
     }
 }
 
-void SceneApp::updateUniformBuffer(uint32_t currentImage, Timer& tmr, int step)
+void SceneApp::updateUniformBuffer(uint32_t currentImage, Timer& tmr)
 {
-    // use stage step and real timer both to control the update uniform buffer 
-    float time = step * 0.02f; // tmr.TotalTime();
+    static auto startTime = std::chrono::high_resolution_clock::now();
+    auto currentTime = std::chrono::high_resolution_clock::now();
+    float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
     UniformBufferObject ubo{};
     ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
     ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
     ubo.proj = glm::perspective(glm::radians(45.0f), mSwapChainExtent.width / (float) mSwapChainExtent.height, 0.1f, 10.0f);
     ubo.proj[1][1] *= -1; // GLM is originally designed for openGL, which y is inverted
 
-    void* data;
-    vkMapMemory(mDevice, mUniformBuffersMemory[currentImage], 0, sizeof(ubo), 0, &data);
-    memcpy(data, &ubo, sizeof(ubo));
-    vkUnmapMemory(mDevice, mUniformBuffersMemory[currentImage]);
+    // void* data;
+    // vkMapMemory(mDevice, mUniformBuffersMemory[currentImage], 0, sizeof(ubo), 0, &data);
+    // memcpy(data, &ubo, sizeof(ubo));
+    // vkUnmapMemory(mDevice, mUniformBuffersMemory[currentImage]);
+    memcpy(mUniformBuffersMapped[currentImage], &ubo, sizeof(ubo));
 }
 
 void SceneApp::drawFrame(Timer& tmr)
 {
     vkWaitForFences(mDevice, 1, &mInFlightFence, VK_TRUE, UINT64_MAX);
-    vkResetFences(mDevice, 1, &mInFlightFence);
     // acquire an image from swapchain
     uint32_t imageIndex;
-    vkAcquireNextImageKHR(mDevice, mSwapChain, UINT64_MAX, mImageAvailableSemaphore, VK_NULL_HANDLE, &imageIndex);
+    VkResult result = vkAcquireNextImageKHR(mDevice, mSwapChain, UINT64_MAX, mImageAvailableSemaphore, VK_NULL_HANDLE, &imageIndex);
+    updateUniformBuffer(mCurrentFrame, tmr);
+    vkResetFences(mDevice, 1, &mInFlightFence);
+
     vkResetCommandBuffer(mCommandBuffer, 0);
     recordCommandBuffer(mCommandBuffer, imageIndex);
 
-    // updateUniformBuffer(mCurrentFrame);
     // we can now submit it 
     VkSubmitInfo submitInfo{};
     submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+
     VkSemaphore waitSemaphores[] = {mImageAvailableSemaphore};
+
     VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
     submitInfo.waitSemaphoreCount = 1;
     submitInfo.pWaitSemaphores = waitSemaphores;
     submitInfo.pWaitDstStageMask = waitStages;
+
     submitInfo.commandBufferCount = 1;
     submitInfo.pCommandBuffers = &mCommandBuffer;
 
@@ -223,6 +179,7 @@ void SceneApp::drawFrame(Timer& tmr)
     if (vkQueueSubmit(mGraphicsQueue, 1, &submitInfo, mInFlightFence)!= VK_SUCCESS) {
         std::runtime_error("failed to submit draw command buffer!");
     }
+
     // presentation
     VkPresentInfoKHR presentInfo{};
     presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
@@ -235,11 +192,11 @@ void SceneApp::drawFrame(Timer& tmr)
     presentInfo.pImageIndices = &imageIndex;
 
     presentInfo.pResults = nullptr;
-    vkQueuePresentKHR(mPresentQueue, &presentInfo);
-    
+    if (vkQueuePresentKHR(mPresentQueue, &presentInfo)!= VK_SUCCESS) {
+        std::runtime_error("failed to update draw command buffer!");
+    }
     mCurrentFrame = (mCurrentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
 }
-
 
 void  SceneApp::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex)
 {
@@ -286,7 +243,11 @@ void  SceneApp::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imag
     scissor.extent = mSwapChainExtent;
     vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 
+    /// @brief Bind the Descriptor Set -----------------------------------------
+    /// @param commandBuffer 
+    /// @param imageIndex 
     vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, mPipelineLayout, 0, 1, &mDescriptorSets[mCurrentFrame], 0, nullptr);
+    // -------------------------------------------------------------------------
     // vkCmdDraw(commandBuffer, static_cast<uint32_t>(mVertices.size()), 1, 0, 0); // vertex count, instance count, first vertex, fisrt instance
     vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(mIndices.size()), 1, 0, 0, 0);
     vkCmdEndRenderPass(commandBuffer);
@@ -313,17 +274,23 @@ void SceneApp::cleanup()
     vkDestroySwapchainKHR(mDevice, mSwapChain, nullptr);
     // clearup Swapchain
 
-    for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
-        vkDestroyBuffer(mDevice, mUniformBuffers[i], nullptr);
-        vkFreeMemory(mDevice, mUniformBuffersMemory[i], nullptr);
-    }
     vkDestroyBuffer(mDevice, mVertexBuffer, nullptr);
     vkFreeMemory(mDevice, mVertexBufferMemory, nullptr);
     vkDestroyBuffer(mDevice, mIndexBuffer, nullptr);
     vkFreeMemory(mDevice, mIndexBufferMemory, nullptr);
 
+    // ------------------------- REMOVE Uniform and Descriptor------------------
+    // ----------------------------------------------------------------------
+
+    for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
+        vkDestroyBuffer(mDevice, mUniformBuffers[i], nullptr);
+        vkFreeMemory(mDevice, mUniformBuffersMemory[i], nullptr);
+    }
+
+
     vkDestroyDescriptorPool(mDevice, mDescriptorPool, nullptr);
     vkDestroyDescriptorSetLayout(mDevice, mDescriptorSetLayout, nullptr);
+    // ----------------------------------------------------------------------
 
     vkDestroyDevice(mDevice, nullptr);
     if (mEnableValidationLayers) {
@@ -414,9 +381,12 @@ void SceneApp::createGraphicsPipeline()
     rasterizer.rasterizerDiscardEnable = VK_FALSE;
     rasterizer.polygonMode = VK_POLYGON_MODE_FILL; // VK_POLYGON_MODE_LINE VK_POLYGON_MODE_POINT
     rasterizer.lineWidth = 1.0f;
+    // -------------------------------------------------------------------
+    // ------ Update Cull Mode for Y-flip --------------------------------
     rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
     // rasterizer.frontFace = VK_FRONT_FACE_CLOCKWISE;
     rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
+    // -------------------------------------------------------------------
 
     rasterizer.depthBiasEnable = VK_FALSE;
     rasterizer.depthBiasConstantFactor = 0.0f;
@@ -466,10 +436,15 @@ void SceneApp::createGraphicsPipeline()
     colorBlending.blendConstants[2] = 0.0f; // Optional
     colorBlending.blendConstants[3] = 0.0f; // Optional
 
+    // update pipeline Layout info -----------------------------------------------------
+
     VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
     pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     pipelineLayoutInfo.setLayoutCount = 1;
+    // std::cout << (char*)mDescriptorSetLayout << " ... " << std::endl;
     pipelineLayoutInfo.pSetLayouts = &mDescriptorSetLayout;
+
+    // ----------------------------------------------------------------------------------
 
     if (vkCreatePipelineLayout(mDevice, &pipelineLayoutInfo, nullptr, &mPipelineLayout) != VK_SUCCESS)
     {

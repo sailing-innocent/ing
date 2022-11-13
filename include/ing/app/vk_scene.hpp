@@ -25,13 +25,10 @@ struct UniformBufferObject {
 class SceneApp: public CanvasApp
 {
 public:
-    SceneApp() = default;
-    SceneApp(const std::string& _vertShaderPath, const std::string& _fragShaderPath): CanvasApp(_vertShaderPath, _fragShaderPath) {}
-    void init();
-    void run();
-    void terminate();
+    SceneApp::SceneApp() = default;
+    SceneApp::SceneApp(const std::string& _vert_p, const std::string& _frag_p): 
+        CanvasApp(_vert_p, _frag_p) {}
 protected:
-    void initVulkan();
     void cleanup();
     void mainLoop();
     void createDescriptorSetLayout();
@@ -44,7 +41,7 @@ protected:
 
 protected:
     void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
-    void updateUniformBuffer(uint32_t currentImage, Timer& tmr, int step);
+    void updateUniformBuffer(uint32_t currentImage, Timer& tmr);
     void calculateFrameStats();
 
 protected:
@@ -53,6 +50,8 @@ protected:
 
     std::vector<VkBuffer> mUniformBuffers;
     std::vector<VkDeviceMemory> mUniformBuffersMemory;
+    std::vector<void*> mUniformBuffersMapped;
+
     VkDescriptorPool mDescriptorPool;
     std::vector<VkDescriptorSet> mDescriptorSets;
     uint32_t mCurrentFrame = 0;

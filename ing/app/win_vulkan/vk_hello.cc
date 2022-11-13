@@ -2,64 +2,6 @@
 
 ING_NAMESPACE_BEGIN
 
-void HelloTriangleApplication::mainLoop()
-{
-    while (!glfwWindowShouldClose(mWindow))
-    {
-        glfwPollEvents();
-        drawFrame();
-    }
-    wait();
-}
-
-void HelloTriangleApplication::wait() {
-    vkDeviceWaitIdle(mDevice);
-}
-
-void HelloTriangleApplication::drawFrame()
-{
-    vkWaitForFences(mDevice, 1, &mInFlightFence, VK_TRUE, UINT64_MAX);
-    vkResetFences(mDevice, 1, &mInFlightFence);
-    // acquire an image from swapchain
-    uint32_t imageIndex;
-    vkAcquireNextImageKHR(mDevice, mSwapChain, UINT64_MAX, mImageAvailableSemaphore, VK_NULL_HANDLE, &imageIndex);
-    vkResetCommandBuffer(mCommandBuffer, 0);
-    recordCommandBuffer(mCommandBuffer, imageIndex);
-    // we can now submit it 
-    VkSubmitInfo submitInfo{};
-    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-    VkSemaphore waitSemaphores[] = {mImageAvailableSemaphore};
-    VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
-    submitInfo.waitSemaphoreCount = 1;
-    submitInfo.pWaitSemaphores = waitSemaphores;
-    submitInfo.pWaitDstStageMask = waitStages;
-    submitInfo.commandBufferCount = 1;
-    submitInfo.pCommandBuffers = &mCommandBuffer;
-
-    VkSemaphore signalSemaphores[] = { mRenderFinishedSemaphore };
-    submitInfo.signalSemaphoreCount = 1;
-    submitInfo.pSignalSemaphores = signalSemaphores;
-
-    // the last parameter is optional, let us know when is safe
-    if (vkQueueSubmit(mGraphicsQueue, 1, &submitInfo, mInFlightFence)!= VK_SUCCESS) {
-        std::runtime_error("failed to submit draw command buffer!");
-    }
-
-    // presentation
-    VkPresentInfoKHR presentInfo{};
-    presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-    presentInfo.waitSemaphoreCount = 1;
-    presentInfo.pWaitSemaphores = signalSemaphores;
-    
-    VkSwapchainKHR swapChains[] = {mSwapChain};
-    presentInfo.swapchainCount = 1;
-    presentInfo.pSwapchains = swapChains;
-    presentInfo.pImageIndices = &imageIndex;
-
-    presentInfo.pResults = nullptr;
-    vkQueuePresentKHR(mPresentQueue, &presentInfo);
-}
-
 void HelloTriangleApplication::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex)
 {
     VkCommandBufferBeginInfo beginInfo{};
@@ -86,9 +28,12 @@ void HelloTriangleApplication::recordCommandBuffer(VkCommandBuffer commandBuffer
     vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, mGraphicsPipeline);
     
     // ADD BUFFER
+    // -----------------------------------------------------------------------
     VkBuffer vertexBuffers[] = {mVertexBuffer};
     VkDeviceSize offsets[] = {0};
     vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
+    // -----------------------------------------------------------------------
+
 
     VkViewport viewport{};
     viewport.x = 0.0f;
@@ -111,29 +56,9 @@ void HelloTriangleApplication::recordCommandBuffer(VkCommandBuffer commandBuffer
     } 
 }
 
-void HelloTriangleApplication::initVulkan()
-{
-    VkCommonApp::createInstance();
 
-    VkCommonApp::setupDebugMessenger();
-
-    VkCommonApp::createSurface();
-    VkCommonApp::pickPhysicalDevice();
-    VkCommonApp::createLogicalDevice();
-    VkCommonApp::createSwapChain();
-    VkCommonApp::createImageViews();
-    VkCommonApp::createRenderPass();
-
-    createGraphicsPipeline();
-
-    VkCommonApp::createFramebuffers();
-    VkCommonApp::createCommandPool();
-
-    createVertexBuffer();
-
-    VkCommonApp::createCommandBuffer();
-    VkCommonApp::createSyncObjects();
-}
+// ----ADD-METHOD-------------------CreateVertxBuffer------------------
+// --------------------------------------------------------------------
 
 void HelloTriangleApplication::createVertexBuffer()
 {
@@ -164,11 +89,14 @@ void HelloTriangleApplication::createVertexBuffer()
     vkFreeMemory(mDevice, stagingBufferMemory, nullptr);
 }
 
+// --------------------------------------------------------------------
+
 void HelloTriangleApplication::createGraphicsPipeline()
 {
-    // std::cout << "Happy Pipeline!" << std::endl;
+    // --------------EXPOSE path ----------------------------------------------
     auto vertShaderCode = readFile(mVertShaderPath.c_str());
     auto fragShaderCode = readFile(mFragShaderPath.c_str());
+    // ------------------------------------------------------------------------
 
     VkShaderModule vertShaderModule = createShaderModule(vertShaderCode);
     VkShaderModule fragShaderModule = createShaderModule(fragShaderCode);
@@ -197,6 +125,9 @@ void HelloTriangleApplication::createGraphicsPipeline()
     dynamicState.dynamicStateCount = static_cast<uint32_t>(dynamicStates.size());
     dynamicState.pDynamicStates = dynamicStates.data();
 
+
+    /// @brief BIND VERTEX INFO
+    // ----------------------------------------------------------------------------------
     VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
     vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
     auto bindingDescription = VkOutVertex::getBindingDescription();
@@ -205,6 +136,8 @@ void HelloTriangleApplication::createGraphicsPipeline()
     vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size());
     vertexInputInfo.pVertexBindingDescriptions = &bindingDescription;
     vertexInputInfo.pVertexAttributeDescriptions = attributeDescriptions.data();
+
+    // ----------------------------------------------------------------------------------
 
     // Input Assembly
     VkPipelineInputAssemblyStateCreateInfo inputAssembly{};
@@ -272,16 +205,6 @@ void HelloTriangleApplication::createGraphicsPipeline()
     colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO; // Optional
     colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD; // Optional
 
-    /*
-    colorBlendAttachment.blendEnable = VK_TRUE;
-    colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
-    colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
-    colorBlendAttachment.colorBlendOp = VK_BLEND_OP_ADD;
-    colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
-    colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
-    colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
-    */
-
     VkPipelineColorBlendStateCreateInfo colorBlending{};
     colorBlending.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
     colorBlending.logicOpEnable = VK_FALSE;
@@ -348,8 +271,10 @@ void HelloTriangleApplication::cleanup()
     vkDestroySwapchainKHR(mDevice, mSwapChain, nullptr);
 
     // DESTROY BUFFER
+    // ------------------------------------------------------------------------
     vkDestroyBuffer(mDevice, mVertexBuffer, nullptr);
     vkFreeMemory(mDevice, mVertexBufferMemory, nullptr);
+    // ------------------------------------------------------------------------
 
     vkDestroyDevice(mDevice, nullptr);
     if (mEnableValidationLayers) {

@@ -6,19 +6,6 @@ CanvasApp::CanvasApp(const std::string& _vertShaderPath, const std::string& _fra
     mVertShaderPath(_vertShaderPath),
     mFragShaderPath(_fragShaderPath)
     {}
-void CanvasApp::init()
-{
-    VkCommonApp::initWindow();
-    initVulkan();
-}
-
-void CanvasApp::terminate() {
-    cleanup();
-}
-
-void CanvasApp::run() {
-    mainLoop();
-}
 
 bool CanvasApp::setVertex(std::vector<float> vfloat, size_t size) {
     if (size % 8 != 0) { return false; }
@@ -39,29 +26,6 @@ bool CanvasApp::setIndex(std::vector<uint16_t> vu16, size_t size)
         mIndices[i] = vu16[i];
     }
     return true;
-}
-
-void CanvasApp::initVulkan()
-{
-    VkCommonApp::createInstance();
-    VkCommonApp::setupDebugMessenger();
-    VkCommonApp::createSurface();
-    VkCommonApp::pickPhysicalDevice();
-    VkCommonApp::createLogicalDevice();
-    VkCommonApp::createSwapChain();
-    VkCommonApp::createImageViews();
-    VkCommonApp::createRenderPass();
-
-    createGraphicsPipeline();
-
-    VkCommonApp::createFramebuffers();
-    VkCommonApp::createCommandPool();
-
-    createVertexBuffer();
-    createIndexBuffer();
-
-    VkCommonApp::createCommandBuffer();
-    VkCommonApp::createSyncObjects();
 }
 
 void CanvasApp::createIndexBuffer()
@@ -93,17 +57,6 @@ void CanvasApp::createIndexBuffer()
     vkDestroyBuffer(mDevice, stagingBuffer, nullptr);
     vkFreeMemory(mDevice, stagingBufferMemory, nullptr);
 }
-
-void CanvasApp::mainLoop()
-{
-    while (!glfwWindowShouldClose(mWindow))
-    {
-        glfwPollEvents();
-        drawFrame();
-    }
-    vkDeviceWaitIdle(mDevice);
-}
-
 
 void CanvasApp::drawFrame()
 {

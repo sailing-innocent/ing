@@ -18,15 +18,10 @@ class CanvasApp: public HelloTriangleApplication
 public:
     CanvasApp() = default;
     CanvasApp(const std::string& _vertShaderPath, const std::string& _fragShaderPath);
-    void init();
-    void run();
-    void terminate();
     bool setVertex(std::vector<float> vfloat, size_t size);
     bool setIndex(std::vector<uint16_t> vu16, size_t size);
 protected:
-    void initVulkan();
     void cleanup();
-    void mainLoop();
     void createVertexBuffer();
     void createIndexBuffer();
     void createGraphicsPipeline();

@@ -37,6 +37,7 @@ public:
     virtual void run();
     virtual void terminate();
     virtual bool tick(float delta_time);
+    virtual void wait();
 protected:
     // procedure
     virtual void initWindow();
@@ -50,10 +51,16 @@ protected:
     virtual void createSwapChain();
     virtual void createImageViews();
     virtual void createRenderPass();
+    virtual void createDescriptorSetLayout();
     virtual void createGraphicsPipeline();
     virtual void createFramebuffers();
     virtual void createCommandPool();
+    virtual void createTextureImage();
     virtual void createVertexBuffer();
+    virtual void createIndexBuffer();
+    virtual void createUniformBuffers();
+    virtual void createDescriptorPool();
+    virtual void createDescriptorSets();
     virtual void createCommandBuffer();
     virtual void createSyncObjects();
     virtual void drawFrame();

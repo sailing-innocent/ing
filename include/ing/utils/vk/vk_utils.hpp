@@ -12,14 +12,15 @@
 
 #include <stdexcept>
 #include <cstdlib>
-
 #include <optional>
 #include <set>
 #include <cstdint> // Necessary for uint32_t
 #include <limits> // Necessary for std::numeric_limits
 #include <algorithm> // Necessary for std::clamp
-
+#include <vector>
+#include <iostream>
 #include <array>
+#include <chrono>
 
 #define VK_USE_PLATFORM_WIN32_KHR
 #include <vulkan/vulkan.h>
@@ -29,10 +30,12 @@
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
 
-#include <chrono>
 
 #include <ing/common.h>
-#include <ing/geometry.h>
+
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include <ing/utils/common_utils.hpp>
 
