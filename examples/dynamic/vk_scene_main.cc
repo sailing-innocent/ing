@@ -11,8 +11,9 @@ int main() {
         -0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
         0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f,
         0.0f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
+        0.0f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
     };
-    std::vector<uint16_t> iu = { 0, 1, 2 };
+    std::vector<uint16_t> iu = { 0, 1, 2, 0, 3, 1};
     if (!app.setVertex(vf,vf.size())) {
         std::cerr << "input vertex failed" << std::endl; 
     }

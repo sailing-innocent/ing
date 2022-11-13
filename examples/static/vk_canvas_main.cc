@@ -27,6 +27,12 @@ bool genVertex(std::vector<float>& vf) {
 int main() {
     CanvasApp app;
 
+    // better support
+    // app.addPoints()
+    // app.addLines()
+    // app.addTriangles()
+    // app.addQuad()
+
     std::vector<float> vertices;
     genVertex(vertices);
 

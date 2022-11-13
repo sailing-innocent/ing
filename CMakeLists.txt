@@ -86,7 +86,7 @@ elseif(${VK_TEST})
         ${ING_LIBS}
         $<TARGET_OBJECTS:libing>
     )
-    add_executable(ing "examples/dynamic/vk_scene_main.cc")
+    add_executable(ing "examples/static/vk_canvas_main.cc")
     target_link_directories(ing PUBLIC ${ING_LIBS_DIR})
     target_include_directories(ing PUBLIC ${ING_INCLUDE_DIR})
     target_link_libraries(ing ${ING_EXAMPLE_LIBS})
