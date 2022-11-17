@@ -250,6 +250,7 @@ void  SceneApp::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imag
     // -------------------------------------------------------------------------
     // vkCmdDraw(commandBuffer, static_cast<uint32_t>(mVertices.size()), 1, 0, 0); // vertex count, instance count, first vertex, fisrt instance
     vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(mIndices.size()), 1, 0, 0, 0);
+    
     vkCmdEndRenderPass(commandBuffer);
     if (vkEndCommandBuffer(commandBuffer)!= VK_SUCCESS) {
         throw std::runtime_error("failed to record command buffer!");

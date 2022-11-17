@@ -62,10 +62,6 @@ protected:
 // pipeline info <- mPipelineLayout mRenderPass
 
 
-
-
-
-
 ING_NAMESPACE_END
 
 #endif // ING_APP_VK_CANVAS_H_
