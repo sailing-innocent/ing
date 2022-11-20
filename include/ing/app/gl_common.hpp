@@ -21,9 +21,6 @@ ING_NAMESPACE_BEGIN
 class GLCommonApp: public INGApp {
 public:
     GLCommonApp() = default;
-    GLCommonApp(std::string& _vertexShaderPath, std::string& _fragmentShaderPath):
-       mVertexShaderPath(_vertexShaderPath),
-       mFragmentShaderPath(_fragmentShaderPath) {}
     void init() override;
     bool tick(int count) override;
     void terminate() override;
@@ -49,31 +46,28 @@ public:
     virtual void addLines(GLLineList _linelist) {
         mLines.appendPrimitive(_linelist);
     }
+    virtual size_t addShader(std::string& _vertPath, std::string& _fragPath);
 protected:
     virtual void initWindow();
     virtual void initGL();
     virtual void cleanup();
     virtual void bindVertexBuffer();
-
+    virtual void addShader(GLShader _shader) {
+        mShaders.push_back(_shader);
+    };
 protected:
     GLFWwindow* mWindow = NULL;
     unsigned int mWidth = 800;
     unsigned int mHeight = 600;
-    std::string mVertexShaderPath; // = "D:/repos/inno/engine/shader/glsl/basic.vert";
-    std::string mFragmentShaderPath; // = "D:/repos/inno/engine/shader/glsl/basic.frag";
-    
+
     GLPrimitive mPrimitiveRoot;
     GLTriangleList mTriangles;
     GLPointList mPoints;
     GLLineList mLines;
     std::vector<float> mVertices; // = { -0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f };
     std::vector<unsigned int> mIndices;
+    std::vector<GLShader> mShaders;
 
-    GLShader mShader;
-    GLShader mShader2;
-    unsigned int mVertexBufferObject;
-    unsigned int mVertexArrayObject;
-    unsigned int mElementBufferObject;
     float mStartTime = 0.0f;
     size_t mLineOffsetStart = 0;
     size_t mLineOffsetEnd = 0;

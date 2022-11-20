@@ -20,12 +20,18 @@ void GLCommonApp::init() {
     initWindow();
     // init gl
     initGL();
-    // build shader
-    mShader = *(new GLShader(mVertexShaderPath, mFragmentShaderPath));
+
     mStartTime = static_cast<float>(glfwGetTime());
     // mShader2 = *(new GLShader("D:/repos/inno/engine/shader/glsl/plain.vert", "D:/repos/inno/engine/shader/glsl/plain.frag"));    
-    // bind Vertex Buffer
+
     bindVertexBuffer();
+}
+
+size_t GLCommonApp::addShader(std::string& _vertPath, std::string& _fragPath)
+{
+    GLShader newShader(_vertPath, _fragPath);
+    mShaders.push_back(newShader);
+    return mShaders.size();
 }
 
 void GLCommonApp::initWindow() {
@@ -99,7 +105,6 @@ void GLCommonApp::bindVertexBuffer() {
     
     delete(vertices);
     delete(indices);
-    std::cout << mPrimitiveRoot.VAO() << " " << mPrimitiveRoot.EBO() << " " <<  mPrimitiveRoot.VBO() << std::endl;
 }
 
 bool GLCommonApp::shouldClose() {
@@ -121,21 +126,11 @@ bool GLCommonApp::tick(int count) {
     float timeValue = static_cast<float>(glfwGetTime()) - mStartTime;
     float greenValue = (sin(timeValue) / 2.0f ) + 0.5f;
     // transform
-    // glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
-    // glm::mat4 trans = glm::mat4(1.0f);
+
+    glm::mat4 trans = glm::mat4(1.0f);
     // trans = glm::translate(trans, glm::vec3(1.0f, 1.0f, 0.0f));
-    // vec = trans * vec;
-    // int vertexColorLocation = glGetUniformLocation(mShaderProgram, "ourColor");
-    // glUseProgram(mShaderProgram);
-    // glm::mat4 trans = glm::mat4(1.0f);
-    // trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
+    trans = glm::rotate(trans, glm::radians(90.0f) * timeValue, glm::vec3(0.0, 0.0, 1.0));
     // trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));  
-    mShader.use();
-    // mShader.setFloat("ourColor", greenValue)
-    mShader.setFloat4("ourColor", 0.0f, greenValue, 0.0f, 1.0f);
-    mShader.setFloat("t", timeValue);
-    // unsigned int transformLoc = glGetUniformLocation(mShader.ID, "transform");
-    // glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
 
     // glDrawArrays(GL_TRIANGLES, 0, mVertices.size());
     // glDrawElements(GL_TRIANGLES, mTriangleOffsetEnd - mTriangleOffsetStart + 1, GL_UNSIGNED_INT, (void*)(mTriangleOffsetStart * sizeof(unsigned int)));
@@ -145,18 +140,21 @@ bool GLCommonApp::tick(int count) {
     // glBindVertexArray(mVertexArrayObject);
     // glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(mIndices.size()) , GL_UNSIGNED_INT, (void*)(0));
     // glBindVertexArray(0);
-
-
     glBindVertexArray(mPrimitiveRoot.VAO());
     // draw triangles
+    mShaders[0].use();
+    mShaders[0].setMat4("transform", glm::value_ptr(trans));
     if (mTriangleOffsetEnd > mTriangleOffsetStart) {
-        glDrawElements(GL_TRIANGLES, mTriangleOffsetEnd - mTriangleOffsetStart, GL_UNSIGNED_INT, (void*)(mTriangleOffsetStart * sizeof(unsigned int)));
+        glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(mTriangleOffsetEnd - mTriangleOffsetStart), GL_UNSIGNED_INT, (void*)(mTriangleOffsetStart * sizeof(unsigned int)));
     }
+    mShaders[1].use();
+    mShaders[1].setFloat4("ourColor", 0.0f, greenValue, 0.0f, 1.0f);
+    mShaders[1].setFloat("t", timeValue);
     if (mLineOffsetEnd > mLineOffsetStart) {
-        glDrawElements(GL_LINES, mLineOffsetEnd - mLineOffsetStart, GL_UNSIGNED_INT, (void*)(mLineOffsetStart * sizeof(unsigned int)));
+        glDrawElements(GL_LINES,  static_cast<unsigned int>(mLineOffsetEnd - mLineOffsetStart), GL_UNSIGNED_INT, (void*)(mLineOffsetStart * sizeof(unsigned int)));
     }
     if (mPointOffsetEnd > mPointOffsetStart) {
-        glDrawElements(GL_POINTS, mPointOffsetEnd - mPointOffsetStart, GL_UNSIGNED_INT, (void*)(mPointOffsetStart * sizeof(unsigned int)));
+        glDrawElements(GL_POINTS, static_cast<unsigned int>(mPointOffsetEnd - mPointOffsetStart), GL_UNSIGNED_INT, (void*)(mPointOffsetStart * sizeof(unsigned int)));
     }
 
     // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
