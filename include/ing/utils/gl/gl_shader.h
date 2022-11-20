@@ -1,6 +1,6 @@
 #pragma once
-#ifndef ING_CORE_SHADER_H_
-#define ING_CORE_SHADER_H_
+#ifndef ING_UTILS_GL_SHADER_H_
+#define ING_UTILS_GL_SHADER_H_
 
 #include <ing/utils/gl/gl_utils.hpp>
 

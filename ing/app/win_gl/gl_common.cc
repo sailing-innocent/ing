@@ -22,7 +22,7 @@ void GLCommonApp::init() {
     initGL();
     // build shader
     mShader = *(new GLShader(mVertexShaderPath, mFragmentShaderPath));
-    mStartTime = glfwGetTime();
+    mStartTime = static_cast<float>(glfwGetTime());
     // mShader2 = *(new GLShader("D:/repos/inno/engine/shader/glsl/plain.vert", "D:/repos/inno/engine/shader/glsl/plain.frag"));    
     // bind Vertex Buffer
     bindVertexBuffer();
@@ -50,42 +50,56 @@ void GLCommonApp::initGL() {
     }    
 }
 void GLCommonApp::bindVertexBuffer() {
-    unsigned int VBO;
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &mElementBufferObject);
-    glGenVertexArrays(1, &mVertexArrayObject);
-
-    glBindVertexArray(mVertexArrayObject);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
-    float* vertices = new float[mVertices.size()];
-    for (auto i = 0; i < mVertices.size(); i++) {
-        vertices[i] = mVertices[i];
+    // construct triangles
+    mTriangleOffsetStart = 0;
+    mPrimitiveRoot.appendPrimitive(mTriangles);
+    mTriangleOffsetEnd = mPrimitiveRoot.indicies().size();
+    mLineOffsetStart = mTriangleOffsetEnd;
+    mPrimitiveRoot.appendPrimitive(mLines);
+    mLineOffsetEnd = mPrimitiveRoot.indicies().size();
+    mPointOffsetStart = mLineOffsetEnd;
+    mPrimitiveRoot.appendPrimitive(mPoints);
+    mPointOffsetEnd = mPrimitiveRoot.indicies().size();
+    // gen buffers
+    glGenBuffers(1, &mPrimitiveRoot.VBO());
+    glGenBuffers(1, &mPrimitiveRoot.EBO());
+    glGenVertexArrays(1, &mPrimitiveRoot.VAO());
+    glBindVertexArray(mPrimitiveRoot.VAO());
+    glBindBuffer(GL_ARRAY_BUFFER, mPrimitiveRoot.VBO());
+    float* vertices = new float[mPrimitiveRoot.vertices().size()];
+    for (auto i = 0; i < mPrimitiveRoot.vertices().size(); i++) {
+        vertices[i] = mPrimitiveRoot.vertices()[i];
     }
-    glBufferData(GL_ARRAY_BUFFER, mVertices.size() * sizeof(float) , vertices, GL_STATIC_DRAW);
-    // first param: which vertex attribute we want to configure
-    // size of vertex attribute
-    // type of data
-    // normalized or not
-    // stride
-    // offset
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mElementBufferObject);
-    unsigned int* indices = new unsigned int[mIndices.size()];
-    for (auto i = 0; i < mIndices.size(); i++) {
-        indices[i] = mIndices[i];
+    glBufferData(
+        GL_ARRAY_BUFFER,
+        mPrimitiveRoot.vertices().size() * sizeof(float), 
+        vertices,
+        GL_STATIC_DRAW  
+    );
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mPrimitiveRoot.EBO());
+    unsigned int* indices = new unsigned int[mPrimitiveRoot.indicies().size()];
+    for (auto i = 0; i < mPrimitiveRoot.indicies().size(); i++) {
+        indices[i] = mPrimitiveRoot.indicies()[i];
+        // std::cout << indices[i] << ",";
     }
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, mIndices.size() * sizeof(unsigned int), indices, GL_STATIC_DRAW);
-    
-    
-    
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    // std::cout << std::endl;
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, mPrimitiveRoot.indicies().size() * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(
+        0,  // which vertex attribute .. something like "position = 0" in shader
+        4,  // sizeof data attribute 
+        GL_FLOAT, // typeof data
+        GL_FALSE,  // normalized or not 
+        8 * sizeof(float), // stride 
+        (void*)0 // offset
+    );
     glEnableVertexAttribArray(0); 
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)( 3 * sizeof(float)));
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)( 4 * sizeof(float)));
     glEnableVertexAttribArray(1); 
-
+    
     delete(vertices);
     delete(indices);
+    std::cout << mPrimitiveRoot.VAO() << " " << mPrimitiveRoot.EBO() << " " <<  mPrimitiveRoot.VBO() << std::endl;
 }
 
 bool GLCommonApp::shouldClose() {
@@ -104,7 +118,7 @@ bool GLCommonApp::tick(int count) {
     glClear(GL_COLOR_BUFFER_BIT);
 
     // draw
-    float timeValue = glfwGetTime() - mStartTime;
+    float timeValue = static_cast<float>(glfwGetTime()) - mStartTime;
     float greenValue = (sin(timeValue) / 2.0f ) + 0.5f;
     // transform
     // glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
@@ -122,16 +136,28 @@ bool GLCommonApp::tick(int count) {
     mShader.setFloat("t", timeValue);
     // unsigned int transformLoc = glGetUniformLocation(mShader.ID, "transform");
     // glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
-    glBindVertexArray(mVertexArrayObject);
+
     // glDrawArrays(GL_TRIANGLES, 0, mVertices.size());
     // glDrawElements(GL_TRIANGLES, mTriangleOffsetEnd - mTriangleOffsetStart + 1, GL_UNSIGNED_INT, (void*)(mTriangleOffsetStart * sizeof(unsigned int)));
     // mShader2.use();
     // glDrawElements(GL_LINES,  mLineOffsetEnd - mLineOffsetStart + 1, GL_UNSIGNED_INT, (void*)(mLineOffsetStart * sizeof(unsigned int)));
-    glDrawElements(GL_LINES,  mIndices.size() , GL_UNSIGNED_INT, (void*)(0));
-    glBindVertexArray(0);
-    // GL PRIMITIVE
-    // starting index
-    // amount of vertices
+    
+    // glBindVertexArray(mVertexArrayObject);
+    // glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(mIndices.size()) , GL_UNSIGNED_INT, (void*)(0));
+    // glBindVertexArray(0);
+
+
+    glBindVertexArray(mPrimitiveRoot.VAO());
+    // draw triangles
+    if (mTriangleOffsetEnd > mTriangleOffsetStart) {
+        glDrawElements(GL_TRIANGLES, mTriangleOffsetEnd - mTriangleOffsetStart, GL_UNSIGNED_INT, (void*)(mTriangleOffsetStart * sizeof(unsigned int)));
+    }
+    if (mLineOffsetEnd > mLineOffsetStart) {
+        glDrawElements(GL_LINES, mLineOffsetEnd - mLineOffsetStart, GL_UNSIGNED_INT, (void*)(mLineOffsetStart * sizeof(unsigned int)));
+    }
+    if (mPointOffsetEnd > mPointOffsetStart) {
+        glDrawElements(GL_POINTS, mPointOffsetEnd - mPointOffsetStart, GL_UNSIGNED_INT, (void*)(mPointOffsetStart * sizeof(unsigned int)));
+    }
 
     // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
     // -------------------------------------------------------------------------------

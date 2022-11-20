@@ -17,12 +17,12 @@ ING_NAMESPACE_BEGIN
 
 class Triangle;
 
-class Testbed_GL: public TestbedBase
+class TestbedGL: public TestbedBase
 {
 public:
-    Testbed_GL() = default;
-    Testbed_GL(ITestbedMode _mode): mTestbedMode(_mode) {}
-    ~Testbed_GL();
+    TestbedGL() = default;
+    TestbedGL(ITestbedMode _mode): mTestbedMode(_mode) {}
+    ~TestbedGL();
     void init_window(int resw, int resh);
     void destroy_window();
     bool frame();

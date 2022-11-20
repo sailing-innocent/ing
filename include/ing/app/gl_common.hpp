@@ -12,6 +12,8 @@
 
 #include <ing/utils/gl/gl_utils.hpp>
 #include <ing/utils/gl/gl_shader.h>
+#include <ing/utils/gl/gl_primitive.h>
+
 #include <ing/app.h>
 
 ING_NAMESPACE_BEGIN
@@ -29,6 +31,24 @@ public:
 public:
     virtual void setVertices(std::vector<float>& _vertices);
     virtual void setIndices(std::vector<unsigned int>& _indices);
+    virtual void addPrimitive(GLPrimitive _primitive) { 
+        mPrimitiveRoot.appendPrimitive(_primitive);
+    }
+    virtual void addTriangles(GLTriangle _triangle) {
+        mTriangles.appendPrimitive(_triangle);
+    }
+    virtual void addTriangles(GLTriangleList _triangles) {
+        mTriangles.appendPrimitive(_triangles);
+    }
+    virtual void addPoints(GLPoint _point) {
+        mPoints.appendPrimitive(_point);
+    }
+    virtual void addLines(GLLine _line) {
+        mLines.appendPrimitive(_line);
+    }
+    virtual void addLines(GLLineList _linelist) {
+        mLines.appendPrimitive(_linelist);
+    }
 protected:
     virtual void initWindow();
     virtual void initGL();
@@ -41,18 +61,26 @@ protected:
     unsigned int mHeight = 600;
     std::string mVertexShaderPath; // = "D:/repos/inno/engine/shader/glsl/basic.vert";
     std::string mFragmentShaderPath; // = "D:/repos/inno/engine/shader/glsl/basic.frag";
+    
+    GLPrimitive mPrimitiveRoot;
+    GLTriangleList mTriangles;
+    GLPointList mPoints;
+    GLLineList mLines;
     std::vector<float> mVertices; // = { -0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f };
     std::vector<unsigned int> mIndices;
+
     GLShader mShader;
     GLShader mShader2;
     unsigned int mVertexBufferObject;
     unsigned int mVertexArrayObject;
     unsigned int mElementBufferObject;
     float mStartTime = 0.0f;
-    size_t mLineOffsetStart = 3;
-    size_t mLineOffsetEnd = 4;
+    size_t mLineOffsetStart = 0;
+    size_t mLineOffsetEnd = 0;
     size_t mTriangleOffsetStart = 0;
-    size_t mTriangleOffsetEnd = 2;
+    size_t mTriangleOffsetEnd = 0;
+    size_t mPointOffsetStart = 0;
+    size_t mPointOffsetEnd = 0;
 };
 
 ING_NAMESPACE_END

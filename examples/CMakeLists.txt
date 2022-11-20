@@ -6,8 +6,8 @@ endif()
 ####### BUILD CONFIG ############################
 
 set(TEST FALSE)
-set(VK_TEST TRUE)
-set(PURE_GL FALSE)
+set(VK_TEST FALSE)
+set(PURE_GL TRUE)
 set(IMGUI_DRX FALSE)
 set(BUILD_BASIC FALSE)
 set(BUILD_CV FALSE)
@@ -27,19 +27,10 @@ if (${BUILD_EXAMPLES})
             "static/vk_canvas_main.cc"
         )
     elseif(${PURE_GL})
-        target_link_directories(libing PUBLIC ${ING_LIBS_DIR})
-        target_link_libraries(libing PUBLIC ${ING_LIBS})
-        target_include_directories(libing PUBLIC ${ING_INCLUDE_DIR})
-    
-        list(APPEND ING_EXAMPLE_LIBS
-            ${ING_LIBS}
-            $<TARGET_OBJECTS:libing>
-        )
-        add_executable(ing "examples/dynamic/wave.cc")
-        target_link_directories(ing PUBLIC ${ING_LIBS_DIR})
-        target_link_libraries(ing PUBLIC ${ING_EXAMPLE_LIBS})
-        target_include_directories(ing PUBLIC ${ING_INCLUDE_DIR})
-    
+        list(APPEND ING_EXAMPLE_SOURCE
+            # "dynamic/wave.cc"
+            "static/gl_app.cc"
+        )    
     elseif(${IMGUI_DRX})
         set(IMGUI_DIR "E:/source/imgui")
         list(APPEND IMGUI_SOURCE
