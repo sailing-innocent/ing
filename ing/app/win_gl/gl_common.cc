@@ -132,14 +132,6 @@ bool GLCommonApp::tick(int count) {
     trans = glm::rotate(trans, glm::radians(90.0f) * timeValue, glm::vec3(0.0, 0.0, 1.0));
     // trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));  
 
-    // glDrawArrays(GL_TRIANGLES, 0, mVertices.size());
-    // glDrawElements(GL_TRIANGLES, mTriangleOffsetEnd - mTriangleOffsetStart + 1, GL_UNSIGNED_INT, (void*)(mTriangleOffsetStart * sizeof(unsigned int)));
-    // mShader2.use();
-    // glDrawElements(GL_LINES,  mLineOffsetEnd - mLineOffsetStart + 1, GL_UNSIGNED_INT, (void*)(mLineOffsetStart * sizeof(unsigned int)));
-    
-    // glBindVertexArray(mVertexArrayObject);
-    // glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(mIndices.size()) , GL_UNSIGNED_INT, (void*)(0));
-    // glBindVertexArray(0);
     glBindVertexArray(mPrimitiveRoot.VAO());
     // draw triangles
     mShaders[0].use();
