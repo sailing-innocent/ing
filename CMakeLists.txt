@@ -1,14 +1,13 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.18)
 
 project(ing VERSION 0.1)
 
-set(TEST FALSE)
-set(VK_TEST TRUE)
-set(PURE_GL FALSE)
-set(IMGUI_DRX FALSE)
-set(BUILD_BASIC FALSE)
-set(BUILD_CV FALSE)
-set(TESTBED TRUE)
+################################## BUILD CONFIG ##################################
+
+set(BUILD_EXAMPLES TRUE)
+set(BUILD_TESTBED FALSE)
+
+####################################################################################
 
 if(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D_CRT_SECURE_NO_WARNINGS")
@@ -24,123 +23,48 @@ if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "RelWithDebInfo")
 endif()
 
-if(${BUILD_BASIC})
-add_definitions("-DUNICODE" "-D_UNICODE")
-endif()
-
-
 list(APPEND ING_INCLUDE_DIR
     "${PROJECT_SOURCE_DIR}/include"
     "E:/includes"
+    "E:/sdk/Vulkan/Include"
 )
 
-list(APPEND ING_SOURCE
-    "ing/core/timer.cc"
-    "ing/utils/common_utils.cc"
-)
+file(GLOB LIBING_SOURCE CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/ing/**/*.cc)
+source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${LIBING_SOURCE})
 
-list(APPEND ING_LIBS_DIR
-    "E:/libs/glfw"
-)
-list(APPEND ING_LIBS
-    "glfw3"
-)
 list(APPEND ING_SOURCE
     "E:/source/glad/glad.c"
-    # "examples/static/gl_app.cc"
+    "ing/core/timer.cc"
+    "ing/utils/common_utils.cc"
     "ing/app/win_gl/gl_common.cc"
     "ing/utils/gl_utils.cc"
     "ing/utils/gl_shader.cc"
-)
-list(APPEND ING_INCLUDE_DIR
-    "E:/sdk/Vulkan/Include"
-)
-list(APPEND ING_LIBS_DIR
-    "E:/libs/glfw"
-    "E:/sdk/Vulkan/Lib"
-)
-list(APPEND ING_LIBS
-    "glfw3"
-    "vulkan-1"
-)
-list(APPEND ING_SOURCE
     "ing/utils/vk_utils.cc"
     "ing/app/win_vulkan/vk_common.cc"
     "ing/app/win_vulkan/vk_hello.cc"
     "ing/app/win_vulkan/vk_canvas.cc"
     "ing/app/win_vulkan/vk_scene.cc"
 )
+
+list(APPEND ING_LIBS_DIR
+    "E:/libs/glfw"
+    "E:/sdk/Vulkan/Lib"
+)
+
+list(APPEND ING_LIBS
+    "glfw3"
+    "vulkan-1"
+)
+
 add_library(libing ${ING_SOURCE})
 target_link_directories(libing PUBLIC ${ING_LIBS_DIR})
 target_link_libraries(libing PUBLIC ${ING_LIBS})
 target_include_directories(libing PUBLIC ${ING_INCLUDE_DIR})
 
+if (${BUILD_EXAMPLES})
+    add_subdirectory(examples)
+endif()
 
-if(${TEST})
-    list(APPEND ING_SOURCE
-        "examples/geometry/mygeotest.cc"   
-    )
-    add_executable(ing ${ING_SOURCE})
-    target_include_directories(ing PUBLIC ${ING_INCLUDE_DIR})
-elseif(${VK_TEST})
-    list(APPEND ING_EXAMPLE_LIBS
-        ${ING_LIBS}
-        $<TARGET_OBJECTS:libing>
-    )
-    add_executable(ing "examples/static/vk_canvas_main.cc")
-    target_link_directories(ing PUBLIC ${ING_LIBS_DIR})
-    target_include_directories(ing PUBLIC ${ING_INCLUDE_DIR})
-    target_link_libraries(ing ${ING_EXAMPLE_LIBS})
-elseif(${PURE_GL})
-    target_link_directories(libing PUBLIC ${ING_LIBS_DIR})
-    target_link_libraries(libing PUBLIC ${ING_LIBS})
-    target_include_directories(libing PUBLIC ${ING_INCLUDE_DIR})
-
-    list(APPEND ING_EXAMPLE_LIBS
-        ${ING_LIBS}
-        $<TARGET_OBJECTS:libing>
-    )
-    add_executable(ing "examples/dynamic/wave.cc")
-    target_link_directories(ing PUBLIC ${ING_LIBS_DIR})
-    target_link_libraries(ing PUBLIC ${ING_EXAMPLE_LIBS})
-    target_include_directories(ing PUBLIC ${ING_INCLUDE_DIR})
-
-elseif(${IMGUI_DRX})
-    set(IMGUI_DIR "E:/source/imgui")
-    list(APPEND IMGUI_SOURCE
-        "${IMGUI_DIR}/backends/imgui_impl_dx11.cpp"
-        "${IMGUI_DIR}/backends/imgui_impl_win32.cpp"
-        "${IMGUI_DIR}/imgui_draw.cpp"
-        "${IMGUI_DIR}/imgui_tables.cpp"
-        "${IMGUI_DIR}/imgui_widgets.cpp"
-        "${IMGUI_DIR}/imgui_demo.cpp"
-        "${IMGUI_DIR}/imgui.cpp"
-    )
-    list(APPEND ING_INCLUDE_DIR
-        "${IMGUI_DIR}/"
-        "${IMGUI_DIR}/backends"
-    )
-    list(APPEND ING_SOURCE
-        ${IMGUI_SOURCE}
-        "examples/static/ui.cpp"
-    )
-    list(APPEND ING_LIB
-        d3d11
-    )
-    add_executable(ing ${ING_SOURCE})
-    target_include_directories(ing PUBLIC ${ING_INCLUDE_DIR})
-    target_link_libraries(ing PUBLIC ${ING_LIB})
-elseif(${BUILD_CV})
-    add_executable(ing "example/image/opencv_impl.cc")
-elseif(${BUILD_BASIC})
-    message("IS BUILDING BASIC")
-
-    list(APPEND WIN_APP_SOURCE
-        # "ing/app/win_app.cc"
-        "ing/app/win_pure.cc"
-        "examples/plain/pure_win.cc"
-    )
-    add_executable(ing WIN32 ${WIN_APP_SOURCE})
-    target_include_directories(ing PUBLIC ${ING_INCLUDE_DIR})
-else()
+if (${BUILD_TESTBED})
+    add_subdirectory(testbed)
 endif()
