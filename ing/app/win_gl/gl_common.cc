@@ -66,6 +66,7 @@ void GLCommonApp::bindVertexBuffer() {
     mPointOffsetStart = mLineOffsetEnd;
     mPrimitiveRoot.appendPrimitive(mPoints);
     mPointOffsetEnd = mPrimitiveRoot.indicies().size();
+
     // gen buffers
     glGenBuffers(1, &mPrimitiveRoot.VBO());
     glGenBuffers(1, &mPrimitiveRoot.EBO());
@@ -145,6 +146,7 @@ bool GLCommonApp::tick(int count) {
     if (mLineOffsetEnd > mLineOffsetStart) {
         glDrawElements(GL_LINES,  static_cast<unsigned int>(mLineOffsetEnd - mLineOffsetStart), GL_UNSIGNED_INT, (void*)(mLineOffsetStart * sizeof(unsigned int)));
     }
+
     if (mPointOffsetEnd > mPointOffsetStart) {
         glDrawElements(GL_POINTS, static_cast<unsigned int>(mPointOffsetEnd - mPointOffsetStart), GL_UNSIGNED_INT, (void*)(mPointOffsetStart * sizeof(unsigned int)));
     }
