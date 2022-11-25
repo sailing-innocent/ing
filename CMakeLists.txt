@@ -2,10 +2,14 @@ cmake_minimum_required(VERSION 3.18)
 
 project(ing VERSION 0.1)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(BUILD_SHARED_LIBS OFF)
+
 ################################## BUILD CONFIG ##################################
 
 set(BUILD_EXAMPLES TRUE)
-set(BUILD_TESTBED FALSE)
+set(BUILD_TESTBED TRUE)
 
 ####################################################################################
 
@@ -14,14 +18,35 @@ if(MSVC)
 else()
 endif()
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_EXTENSIONS OFF)
-
 if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     message(STATUS "No release type specified. Setting to 'Release'")
     set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
     set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "RelWithDebInfo")
 endif()
+
+
+###################### DEPS DEFINITION ###########################
+
+set(MAIN_INCLUDES "E:/includes")
+set(MAIN_LIBS "E:/libs")
+
+set(IMGUI_DIR "E:/source/imgui/")
+set(IMGUI_INCLUDE "${IMGUI_DIR}")
+list(APPEND IMGUI_SOURCE
+    "${IMGUI_DIR}/imgui.cpp"
+    "${IMGUI_DIR}/imgui_draw.cpp"
+    "${IMGUI_DIR}/imgui_tables.cpp"
+    "${IMGUI_DIR}/imgui_widgets.cpp"
+)
+
+set(LIBSAIL_INCLUDE "D:/repos/sail/include")
+set(LIBSAIL_DIR "D:/repos/sail/build/Debug")
+set(LIBING_INCLUDE "D:/repos/ing/include")
+set(LIBING_DIR "D:/repos/ing/build/Debug")
+
+set(EIGEN_DIR "E:/libs/eigen/")
+set(GLAD_SOURCE "E:/source/glad/glad.c")
+#################################################################
 
 list(APPEND ING_INCLUDE_DIR
     "${PROJECT_SOURCE_DIR}/include"
@@ -61,10 +86,11 @@ target_link_directories(libing PUBLIC ${ING_LIBS_DIR})
 target_link_libraries(libing PUBLIC ${ING_LIBS})
 target_include_directories(libing PUBLIC ${ING_INCLUDE_DIR})
 
-if (${BUILD_EXAMPLES})
-    add_subdirectory(examples)
-endif()
 
 if (${BUILD_TESTBED})
     add_subdirectory(testbed)
+endif()
+
+if (${BUILD_EXAMPLES})
+    add_subdirectory(examples)
 endif()

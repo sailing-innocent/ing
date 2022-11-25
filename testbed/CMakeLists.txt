@@ -1,1 +1,40 @@
 cmake_minimum_required(VERSION 3.18)
+
+set(TARGET_NAME testbed)
+
+set(CUDA_ENABLED TRUE)
+if (CUDA_ENABLED)
+
+endif()
+
+file(GLOB TESTBED_SOURCES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cc)
+
+source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${TESTBED_SOURCES})
+
+list(APPEND TESTBED_INCLUDES
+    ${ING_INCLUDE_DIR}
+    "${CMAKE_CURRENT_SOURCE_DIR}/include"
+    "${IMGUI_INCLUDE}"
+)
+# message(${TESTBED_INCLUDES})
+
+list(APPEND TESTBED_SOURCES
+    ${IMGUI_SOURCE}
+    ${GLAD_SOURCE}
+)
+# message(${TESTBED_SOURCES})
+
+list(APPEND TESTBED_LIBS
+    ${ING_LIBS}
+)
+
+list(APPEND TESTBED_LIBS_DIR
+    ${ING_LIBS_DIR}
+)
+
+
+add_library(${TARGET_NAME} ${TESTBED_HEADERS} ${TESTBED_SOURCES})
+target_include_directories(${TARGET_NAME} PUBLIC ${TESTBED_INCLUDES})
+target_compile_definitions(${TARGET_NAME} PUBLIC ${TESTBED_DIFINITIONS})
+target_link_libraries(${TARGET_NAME} PUBLIC ${TESTBED_LIBS})
+target_link_directories(${TARGET_NAME} PUBLIC ${TESTBED_LIBS_DIR})
