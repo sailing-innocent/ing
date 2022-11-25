@@ -10,6 +10,7 @@ list(APPEND TESTBED_INCLUDES
     ${ING_INCLUDE_DIR}
     "${CMAKE_CURRENT_SOURCE_DIR}/include"
     "${IMGUI_INCLUDE}"
+    "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.8/include"
 )
 # message(${TESTBED_INCLUDES})
 

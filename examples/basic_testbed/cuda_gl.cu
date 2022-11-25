@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "testbed/pure/pure_gl.h"
+#include "testbed/cuda/cuda_gl.cuh"
 
 using namespace ing;
 
@@ -9,7 +9,7 @@ int main(int argc, char** argv)
     std::cout << "Hello Pure GL Testbed!" << std::endl;
     try {
         ITestbedMode mode{RaytraceMesh};
-        TestbedPureGL testbed{mode};
+        TestbedCudaGL testbed{mode};
         testbed.init();
         while (!testbed.frame()) {
             // std::cout << "tick" << std::endl;

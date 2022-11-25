@@ -15,16 +15,27 @@
 
 ING_NAMESPACE_BEGIN
 
-TestbedPureGL::~TestbedPureGL() { destroy_window(); }
+TestbedPureGL::~TestbedPureGL() {
+    destroy_buffers();
+    destroy_window(); 
+}
+
+void TestbedPureGL::init()
+{
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
+
+    init_window(800, 600);
+    init_buffers();
+}
 
 void TestbedPureGL::init_window(int resw, int resh) 
 {
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
     mWindow = glfwCreateWindow(resw, resh, "Testbed_PURE_GL", NULL, NULL);
+    m_window_res[0] = resw;
+    m_window_res[1] = resh;
     if (mWindow == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -38,6 +49,12 @@ void TestbedPureGL::init_window(int resw, int resh)
         std::cout << "Failed to initalize GLAD" << std::endl;
     }
 }
+
+void TestbedPureGL::init_buffers()
+{}
+
+void TestbedPureGL::destroy_buffers()
+{}
 
 void TestbedPureGL::destroy_window()
 {

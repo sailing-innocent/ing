@@ -14,8 +14,12 @@ public:
     TestbedPureGL() = default;
     ~TestbedPureGL();
     explicit TestbedPureGL(ITestbedMode mode): TestbedBase(mode) {}
+    void init() override;
     void init_window(int resw, int resh) override;
+    void init_buffers() override;
+
     void destroy_window() override;
+    void destroy_buffers() override;
     bool frame() override;
     // class SphereTracer
     // redraw_gui_next_frame

@@ -15,8 +15,12 @@ public:
     TestbedBase() = default;
     explicit TestbedBase(ITestbedMode mode): m_testbed_mode(mode) {}
     virtual ~TestbedBase() {}
+    virtual void init() = 0;
     virtual void init_window(int resw, int resh) = 0;
+    virtual void init_buffers() = 0;
     virtual void destroy_window() = 0;
+    virtual void destroy_buffers() = 0;
+
     virtual bool frame() = 0;
 protected:
     ITestbedMode m_testbed_mode;
