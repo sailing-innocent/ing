@@ -12,7 +12,7 @@ class TestbedPureGL: public TestbedBase
 {
 public:
     TestbedPureGL() = default;
-    ~TestbedPureGL() {}
+    ~TestbedPureGL();
     explicit TestbedPureGL(ITestbedMode mode): TestbedBase(mode) {}
     void init_window(int resw, int resh) override;
     void destroy_window() override;
@@ -24,7 +24,7 @@ protected:
     void draw_gui();
 
 protected:
-    GLFWwindow* m_glfw_window = nullptr;
+    GLFWwindow* mWindow = nullptr;
     // m_render_texture
 };
 

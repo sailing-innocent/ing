@@ -2,11 +2,6 @@ cmake_minimum_required(VERSION 3.18)
 
 set(TARGET_NAME testbed)
 
-set(CUDA_ENABLED TRUE)
-if (CUDA_ENABLED)
-
-endif()
-
 file(GLOB TESTBED_SOURCES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cc)
 
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${TESTBED_SOURCES})
@@ -32,6 +27,26 @@ list(APPEND TESTBED_LIBS_DIR
     ${ING_LIBS_DIR}
 )
 
+if (CUDA_ENABLED)
+    set(CMAKE_CUDA_STANDARD 14)
+    set(CMAKE_CUDA_STANDARD_REQUIRED ON)
+    set(CMAKE_CUDA_EXTENSIONS OFF)
+    set(CUDA_LINK_LIBRARIES_KEYWORD PUBLIC)
+    set(CMAKE_CUDA_RUNTIME_LIBRARY Shared)
+    if (MSVC)
+        list(APPEND CUDA_NVCC_FLAGS "-Xcompiler=-bigobj")
+    endif()
+    list(APPEND CUDA_NVCC_FLAGS "--extended-lambda")
+    list(APPEND CUDA_NVCC_FLAGS "--expt-relaxed-constexpr")
+    
+    set(CMAKE_CUDA_ARCHITECTURES 86)
+    
+    file(GLOB TESTBED_CUDA_SOURCES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source_cu/*.cu)
+    source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${TESTBED_CUDA_SOURCES})
+    list(APPEND TESTBED_SOURCES
+        ${TESTBED_CUDA_SOURCES}
+    )
+endif()
 
 add_library(${TARGET_NAME} ${TESTBED_HEADERS} ${TESTBED_SOURCES})
 target_include_directories(${TARGET_NAME} PUBLIC ${TESTBED_INCLUDES})

@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.18)
 
-project(ing VERSION 0.1)
+project(ing 
+    VERSION 0.2
+    DESCRIPTION "The ING Graphics Library"
+    LANGUAGES C CUDA CXX
+)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -10,6 +14,7 @@ set(BUILD_SHARED_LIBS OFF)
 
 set(BUILD_EXAMPLES TRUE)
 set(BUILD_TESTBED TRUE)
+set(CUDA_ENABLED TRUE)
 
 ####################################################################################
 

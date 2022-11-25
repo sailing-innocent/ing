@@ -11,11 +11,9 @@ int main(int argc, char** argv)
         ITestbedMode mode{RaytraceMesh};
         TestbedPureGL testbed{mode};
         testbed.init_window(800, 600);
-        /*
-        while (testbed.frame()) {
-
+        while (!testbed.frame()) {
+            // std::cout << "tick" << std::endl;
         }
-        */
     } catch (const std::exception& e) {
         std::cerr << "EXCEPTION: " << std::endl;
         return 1;
