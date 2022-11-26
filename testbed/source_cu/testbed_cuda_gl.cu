@@ -26,9 +26,9 @@ __global__ void createVertices(float4* positions, float time, unsigned int width
     v = v * 2.0f - 1.0f;
 
     // calculate simple sine wave pattern
-    float freq = 8.0f;
-    float w = sinf(u * freq + time) * cosf(v * freq + time) * 0.5f;
-
+    float freq = 18.0f;
+    // float w = sinf(u * freq + time) * cosf(v * freq + time) * 0.5f;
+    float w = sinf(freq * sqrtf( u * u + v * v) - time * 6.0f);
     // write position
     positions[y*width + x] = make_float4(u, v, w, 1.0f);
 }
@@ -80,15 +80,10 @@ void TestbedCudaGL::init_buffers()
         m_positions_VBO, 
         cudaGraphicsMapFlagsWriteDiscard
     );
-    
-
-
 }
 
-bool TestbedCudaGL::frame()
+void TestbedCudaGL::gen_verticies()
 {
-    processInput(mWindow);
-
     float timeValue = static_cast<float>(glfwGetTime());
     float4* positions;
     cudaGraphicsMapResources(1, &m_positionsVBO_CUDA, 0);
@@ -98,6 +93,12 @@ bool TestbedCudaGL::frame()
     dim3 dimGrid(m_window_res[0]/dimBlock.x, m_window_res[1]/dimBlock.y, 1);
     createVertices<<<dimGrid, dimBlock>>>(positions, timeValue, m_window_res[0], m_window_res[1]);
     cudaGraphicsUnmapResources(1, &m_positionsVBO_CUDA, 0);
+}
+
+bool TestbedCudaGL::frame()
+{
+    processInput(mWindow);
+    gen_verticies();
 
     // Render from buffer object
     glClearColor(0.2f, 0.3f, 0.6f, 1.0f);
@@ -115,6 +116,12 @@ bool TestbedCudaGL::frame()
     glfwPollEvents();
 
     return glfwWindowShouldClose(mWindow);
+}
+
+void TestbedCudaGL::destroy_buffers()
+{
+    cudaGraphicsUnregisterResource(m_positionsVBO_CUDA);
+    glDeleteBuffers(1, &m_positions_VBO);
 }
 
 ING_NAMESPACE_END

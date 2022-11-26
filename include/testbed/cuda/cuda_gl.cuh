@@ -19,7 +19,10 @@ public:
     ~TestbedCudaGL();
     bool frame() override;
     void init_buffers() override;
-    // void destroy_buffers();
+    void destroy_buffers();
+protected:
+    virtual void gen_verticies();
+
 protected:
     unsigned int m_cuda_device = 0;
     unsigned int m_positions_VBO;
