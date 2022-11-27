@@ -8,7 +8,7 @@ list(APPEND ING_EXAMPLE_LIBS
 
 # add_executable(${TARGET_NAME} "pure_gl.cc")
 # add_executable(${TARGET_NAME} "cuda_gl.cu")
-add_executable(${TARGET_NAME} "cuda_gl_extent.cu")
+add_executable(${TARGET_NAME} "basic/cuda_gl_extent.cu")
 target_include_directories(${TARGET_NAME} PUBLIC ${ING_INCLUDE_DIR})
 target_link_directories(${TARGET_NAME} PUBLIC ${ING_LIBS_DIR})
 target_link_libraries(${TARGET_NAME} PUBLIC ${ING_EXAMPLE_LIBS})

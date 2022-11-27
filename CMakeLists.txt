@@ -51,6 +51,7 @@ set(LIBING_DIR "D:/repos/ing/build/Debug")
 
 set(EIGEN_DIR "E:/libs/eigen/")
 set(GLAD_SOURCE "E:/source/glad/glad.c")
+
 #################################################################
 
 list(APPEND ING_INCLUDE_DIR
