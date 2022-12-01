@@ -6,7 +6,7 @@ using namespace ing;
 
 int main(int argc, char** argv)
 {
-    std::cout << "Hello Pure GL Testbed!" << std::endl;
+    std::cout << "Hello CUDA GL Testbed!" << std::endl;
     try {
         ITestbedMode mode{RaytraceMesh};
         TestbedCudaGL testbed{mode};

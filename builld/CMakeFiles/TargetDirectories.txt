@@ -1,0 +1,7 @@
+D:/repos/ing/builld/CMakeFiles/libing.dir
+D:/repos/ing/builld/CMakeFiles/ALL_BUILD.dir
+D:/repos/ing/builld/CMakeFiles/ZERO_CHECK.dir
+D:/repos/ing/builld/testbed/CMakeFiles/testbed.dir
+D:/repos/ing/builld/examples/basic_app/CMakeFiles/basic_app_gl.dir
+D:/repos/ing/builld/examples/basic_testbed/CMakeFiles/basic_testbed.dir
+D:/repos/ing/builld/examples/basic_testbed/CMakeFiles/raytracer.dir
