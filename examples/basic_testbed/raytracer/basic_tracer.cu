@@ -1,11 +1,12 @@
 #include <iostream>
-#include "testbed/cuda/raytracer.h"
+#include "testbed/cuda/raytracer.cuh"
 
 using namespace ing;
 
 int main(int argc, char** argv)
 {
     std::cout << "Hello CUDA GL raytracer" << std::endl;
+    
     try {
         RayTracerCudaGL tracer;
         tracer.init();

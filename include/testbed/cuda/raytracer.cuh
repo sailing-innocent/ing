@@ -7,6 +7,7 @@
 */
 
 #include <testbed/cuda/cuda_gl.cuh>
+#include <testbed/cuda/utils/tracer.cuh>
 
 ING_NAMESPACE_BEGIN
 
@@ -17,6 +18,9 @@ public:
     ~RayTracerCudaGL();
 protected:
     void gen_verticies();
+protected:
+    World m_world;
+    Camera m_camera;
 };
 
 ING_NAMESPACE_END
