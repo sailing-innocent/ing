@@ -27,7 +27,7 @@ void TestbedPureGL::init()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
 
-    init_window(800, 800);
+    init_window(800, 600);
     init_buffers();
 }
 
