@@ -3,19 +3,12 @@
 
 ING_NAMESPACE_BEGIN
 
-ING_CU_HOST_DEVICE color ray_color(const Ray& r)
+ING_CU_HOST_DEVICE color ray_color(const Ray& r, Sphere& s)
 {
-    point center{0, 0, -1};
-    float radius = 0.5f;
-    vec4 oc = r.origin() - center;
-    float a = dot(r.dir(), r.dir());
-    float b = 2.0 * dot(oc, r.dir());
-    float c = dot(oc, oc) - radius * radius;
-    auto discriminant = b * b - 4 * a * c;
-    if (discriminant > 0) {
-        return color(1.0f, 0.0f, 0.0f);
+    hit_record rec;
+    if (s.hit(r, 0, INFINITY, rec)) {
+        return 0.5 * (rec.normal + color(1,1,1));
     }
-
     // background is blended blue & white
     vec4 unit_direction = unit_vector(r.dir());
     auto t = 0.5 * (unit_direction.y() + 1.0);
@@ -56,7 +49,8 @@ __global__ void tracer_kernel(
     Ray ray{origin, ray_dir};
 
     // if (world.hit(ray)) color = ray_color(world, ray)
-    color c = ray_color(ray);
+    Sphere s;
+    color c = ray_color(ray, s);
 
     // write vertex and color
     positions[8*(y*width+x)+0] = ou;

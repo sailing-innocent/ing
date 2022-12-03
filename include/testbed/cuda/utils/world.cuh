@@ -9,9 +9,7 @@
  * @desp: the world scene header
 */
 
-#include <testbed/cuda/common_device.cuh>
-#include <testbed/cuda/utils/vec4.cuh>
-#include <testbed/cuda/utils/ray.cuh>
+#include <testbed/cuda/utils/hittable.cuh>
 #include <vector>
 
 ING_NAMESPACE_BEGIN
@@ -19,7 +17,13 @@ ING_NAMESPACE_BEGIN
 
 class World {
 public:
+    ING_CU_HOST_DEVICE bool add_sphere(Sphere s) {
+        m_spheres.push_back(s);
+    }
+public:
     float val = 0.25f;
+protected:
+    std::vector<Sphere> m_spheres;
 };
 
 ING_NAMESPACE_END
