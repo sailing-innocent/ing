@@ -2,15 +2,13 @@ cmake_minimum_required(VERSION 3.18)
 set(TARGET_NAME basic_app)
 
 set(TEST FALSE)
-
-set(GL TRUE)
+set(PURE TRUE)
+set(GL FALSE)
 set(VK FALSE)
 set(DRX FALSE)
 
-set(PURE TRUE)
-
 set(VK_TEST FALSE)
-set(PURE_GL TRUE)
+set(PURE_GL FALSE)
 set(IMGUI_DRX FALSE)
 set(BUILD_BASIC FALSE)
 set(BUILD_CV FALSE)
@@ -18,14 +16,20 @@ set(BUILD_CV FALSE)
 if(${TEST})
 endif()
 
+if(${PURE})
+    set(TARGET_NAME pure_win)
+    add_executable(${TARGET_NAME} WIN32 "plain/pure_win.cc")
+    target_link_directories(${TARGET_NAME} PUBLIC ${ING_LIBS_DIR})
+    target_include_directories(${TARGET_NAME} PUBLIC ${ING_INCLUDE_DIR})
+    target_link_libraries(${TARGET_NAME} ${ING_EXAMPLE_LIBS})
+endif()
+
 if(${GL})
     set(TARGET_NAME basic_app_gl)
-    if(${PURE})
-        list(APPEND ING_EXAMPLE_SOURCE
-            # "dynamic/wave.cc"
-            "static/gl_app.cc"
-        ) 
-    endif()
+    list(APPEND ING_EXAMPLE_SOURCE
+        # "dynamic/wave.cc"
+        "static/gl_app.cc"
+    )
     add_executable(${TARGET_NAME} ${ING_EXAMPLE_SOURCE})
     target_link_directories(${TARGET_NAME} PUBLIC ${ING_LIBS_DIR})
     target_include_directories(${TARGET_NAME} PUBLIC ${ING_INCLUDE_DIR})
@@ -34,11 +38,9 @@ endif()
 
 if(${VK})
     set(TARGET_NAME basic_app_vk)
-    if(${PURE})
-        list(APPEND ING_EXAMPLE_SOURCE
-            "static/vk_canvas_main.cc"
-        )
-    endif()
+    list(APPEND ING_EXAMPLE_SOURCE
+        "static/vk_canvas_main.cc"
+    )
     add_executable(${TARGET_NAME} ${ING_EXAMPLE_SOURCE})
     target_link_directories(${TARGET_NAME} PUBLIC ${ING_LIBS_DIR})
     target_include_directories(${TARGET_NAME} PUBLIC ${ING_INCLUDE_DIR})
@@ -47,8 +49,6 @@ endif()
 
 if(${DRX})
     set(TARGET_NAME basic_app_drx)
-    if(${PURE})
-    endif()
     add_executable(${TARGET_NAME} ${ING_EXAMPLE_SOURCE})
     target_link_directories(${TARGET_NAME} PUBLIC ${ING_LIBS_DIR})
     target_include_directories(${TARGET_NAME} PUBLIC ${ING_INCLUDE_DIR})

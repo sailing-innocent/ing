@@ -4,11 +4,15 @@
 */
 
 #include <ing/app/win_pure.hpp>
+#include "tchar.h"
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     switch(msg)
     {
+        case WM_LBUTTONDOWN:
+            MessageBox(0, _T("Hello World!"), _T("Hello"), MB_OK);
+            return 0;
         case WM_KEYDOWN:
             if (wParam == VK_ESCAPE)
                 DestroyWindow(hWnd);
@@ -22,7 +26,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
                 HDC hdc = BeginPaint(hWnd, &ps);
 
                 // All painting occurs here, between BeginPaint and EndPaint.
-                FillRect(hdc, &ps.rcPaint, (HBRUSH)GetStockObject(BLACK_BRUSH));
+                FillRect(hdc, &ps.rcPaint, (HBRUSH)GetStockObject(WHITE_BRUSH));
                 EndPaint(hWnd, &ps);
                 return 0;
             }
@@ -46,16 +50,16 @@ bool PureWinApp::Init() {
     wc.hCursor = LoadCursor(0, IDC_ARROW);
     wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
     wc.lpszMenuName = 0;
-    wc.lpszClassName = L"BasicWndClass";
+    wc.lpszClassName = _T("BasicWndClass");
 
     if (!RegisterClass(&wc)) {
-        MessageBox(0, L"RegisterClass FAILED", 0, 0);
+        MessageBox(0, _T("RegisterClass FAILED"), 0, 0);
         return false;
     }
 
     mGhMainWnd = CreateWindow(
-        L"BasicWndClass",
-        L"Wnd32Basic",
+        _T("BasicWndClass"),
+        _T("Wnd32Basic"),
         WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT,
         CW_USEDEFAULT,
@@ -69,7 +73,7 @@ bool PureWinApp::Init() {
 
     if (mGhMainWnd == 0) 
     {
-        MessageBox(0, L"CreateWindow FAILED", 0, 0);
+        MessageBox(0, _T("CreateWindow FAILED"), 0, 0);
         return false;
     }
 
@@ -87,7 +91,7 @@ int PureWinApp::Run() {
     {
         if (bRet == -1)
         {
-            MessageBox(0, L"GetMessage FAILED", L"Error", MB_OK);
+            MessageBox(0, _T("GetMessage FAILED"), _T("Error"), MB_OK);
             break;
         }
         else

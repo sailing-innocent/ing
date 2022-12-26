@@ -52,6 +52,9 @@ __global__ void tracer_kernel(
     Sphere s;
     color c = ray_color(ray, s);
 
+    // add debug info
+    color coverc{(blockIdx.x+blockIdx.y)%2,1.0f,0.0f};
+    c = (coverc + c)/2;
     // write vertex and color
     positions[8*(y*width+x)+0] = ou;
     positions[8*(y*width+x)+1] = ov;

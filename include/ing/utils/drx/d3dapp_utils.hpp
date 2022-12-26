@@ -170,6 +170,10 @@ struct MeshGeometry
 
 struct Light {};
 
+#define MaxLights 16
+
+struct MaterialConstants {};
+
 struct Material {};
 
 struct Texture {};

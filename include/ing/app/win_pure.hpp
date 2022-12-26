@@ -14,14 +14,19 @@
 
 ING_NAMESPACE_BEGIN
 
-class PureWinApp: public BaseApp
+class PureWinApp: public INGApp
 {
 public:
     PureWinApp(HINSTANCE instanceHandle, int show):
         mInstanceHandle(instanceHandle),
         mShow(show) {}
-    virtual bool Init() override;
-    virtual int Run() override;
+    virtual bool Init();
+    virtual int Run();
+
+public:
+    virtual void init() override {};
+    virtual bool tick(int count) override { return true; };
+    virtual void terminate() override {};
 private:
     HINSTANCE mInstanceHandle;
     int mShow;

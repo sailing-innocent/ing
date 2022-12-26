@@ -75,6 +75,7 @@ list(APPEND ING_SOURCE
     "ing/app/win_vulkan/vk_hello.cc"
     "ing/app/win_vulkan/vk_canvas.cc"
     "ing/app/win_vulkan/vk_scene.cc"
+    "ing/app/win_pure.cc"
 )
 
 list(APPEND ING_LIBS_DIR
