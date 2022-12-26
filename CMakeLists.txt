@@ -60,22 +60,12 @@ list(APPEND ING_INCLUDE_DIR
     "E:/sdk/Vulkan/Include"
 )
 
-file(GLOB LIBING_SOURCE CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/ing/**/*.cc)
+file(GLOB_RECURSE LIBING_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/ing/*.cc)
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${LIBING_SOURCE})
 
 list(APPEND ING_SOURCE
     "E:/source/glad/glad.c"
-    "ing/core/timer.cc"
-    "ing/utils/common_utils.cc"
-    "ing/app/win_gl/gl_common.cc"
-    "ing/utils/gl_utils.cc"
-    "ing/utils/gl_shader.cc"
-    "ing/utils/vk_utils.cc"
-    "ing/app/win_vulkan/vk_common.cc"
-    "ing/app/win_vulkan/vk_hello.cc"
-    "ing/app/win_vulkan/vk_canvas.cc"
-    "ing/app/win_vulkan/vk_scene.cc"
-    "ing/app/win_pure.cc"
+    ${LIBING_SOURCE}
 )
 
 list(APPEND ING_LIBS_DIR
