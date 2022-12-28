@@ -32,10 +32,10 @@ endif()
 
 ###################### DEPS DEFINITION ###########################
 
-set(MAIN_INCLUDES "E:/includes")
-set(MAIN_LIBS "E:/libs")
+set(MAIN_INCLUDES "D:/includes")
+set(MAIN_LIBS "D:/libs")
 
-set(IMGUI_DIR "E:/source/imgui/")
+set(IMGUI_DIR "D:/source/imgui/")
 set(IMGUI_INCLUDE "${IMGUI_DIR}")
 list(APPEND IMGUI_SOURCE
     "${IMGUI_DIR}/imgui.cpp"
@@ -49,28 +49,28 @@ set(LIBSAIL_DIR "D:/repos/sail/build/Debug")
 set(LIBING_INCLUDE "D:/repos/ing/include")
 set(LIBING_DIR "D:/repos/ing/build/Debug")
 
-set(EIGEN_DIR "E:/libs/eigen/")
-set(GLAD_SOURCE "E:/source/glad/glad.c")
+set(EIGEN_DIR "D:/libs/eigen/")
+set(GLAD_SOURCE "D:/source/glad/glad.c")
 
 #################################################################
 
 list(APPEND ING_INCLUDE_DIR
     "${PROJECT_SOURCE_DIR}/include"
-    "E:/includes"
-    "E:/sdk/Vulkan/Include"
+    "D:/includes"
+    "D:/libs/vulkan/Include"
 )
 
 file(GLOB_RECURSE LIBING_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/ing/*.cc)
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${LIBING_SOURCE})
 
 list(APPEND ING_SOURCE
-    "E:/source/glad/glad.c"
+    ${GLAD_SOURCE}
     ${LIBING_SOURCE}
 )
 
 list(APPEND ING_LIBS_DIR
-    "E:/libs/glfw"
-    "E:/sdk/Vulkan/Lib"
+    "D:/libs/glfw"
+    "D:/libs/vulkan/Lib"
 )
 
 list(APPEND ING_LIBS

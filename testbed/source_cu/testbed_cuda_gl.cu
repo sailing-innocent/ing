@@ -61,8 +61,8 @@ TestbedCudaGL::~TestbedCudaGL()
 void TestbedCudaGL::init_buffers()
 {
     // init shaders
-    std::string _vertPath = "E:/assets/shaders/testbed/shader.vert";
-    std::string _fragPath = "E:/assets/shaders/testbed/shader.frag";
+    std::string _vertPath = "./shaders/testbed/shader.vert";
+    std::string _fragPath = "./shaders/testbed/shader.frag";
     GLShader newShader(_vertPath, _fragPath);
     m_shader = newShader;
 
